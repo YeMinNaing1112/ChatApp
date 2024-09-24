@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "345052950840",
+    "project_id": "chatapp-60ab0",
+    "storage_bucket": "chatapp-60ab0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345052950840:android:b980cefbb6206b67da11cd",
+        "android_client_info": {
+          "package_name": "com.yeminnaing.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGBeOlugZDjoNYWDo190DjUGt97jEer7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
