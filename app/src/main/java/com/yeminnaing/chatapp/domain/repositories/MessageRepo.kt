@@ -3,11 +3,16 @@ package com.yeminnaing.chatapp.domain.repositories
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
 
 interface MessageRepo {
-    fun sendMessage(channelId: String, message: String)
+    fun sendMessage(chatId: String, message: String)
 
     fun listenForMessage(
         onSuccess: (messages: List<MessageResponse>) -> Unit,
         onFailure: (String) -> Unit,
-        channelId: String
+        chatId: String
+    )
+    fun getLastMessage(
+        onSuccess: (messages: MessageResponse) -> Unit,
+        onFailure: (String) -> Unit,
+        chatId: String
     )
 }

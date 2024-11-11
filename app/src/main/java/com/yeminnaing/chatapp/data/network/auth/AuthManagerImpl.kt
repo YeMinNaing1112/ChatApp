@@ -1,10 +1,13 @@
 package com.yeminnaing.chatapp.data.network.auth
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.yeminnaing.chatapp.domain.responses.UserResponse
 import javax.inject.Inject
 
 class AuthManagerImpl @Inject constructor(
     private val mFirebaseAuth: FirebaseAuth,
+    private val mFirebaseDatabase: DatabaseReference
 ) : AuthManager {
     override fun login(
         email: String,
@@ -38,6 +41,13 @@ class AuthManagerImpl @Inject constructor(
                             .build()
                     )
                     onSuccess()
+                    val userId=mFirebaseAuth.currentUser?.uid ?: ""
+                    val user = UserResponse(
+                        userId =userId ,
+                        email=email,
+                        username = name
+                    )
+                    mFirebaseDatabase.child("users").child(userId).setValue(user)
                 } else {
                     onFailure(it.exception?.message ?: "Please Check The Internet Connection")
                 }

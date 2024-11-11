@@ -1,4 +1,4 @@
-package com.yeminnaing.chatapp.presentation.authScreen
+package com.yeminnaing.chatapp.presentation.screens.authScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -60,10 +60,10 @@ fun RegisterScreen(navController: NavController ) {
             is AuthVm.AuthStates.Error ->{
                 Toast.makeText(context,((authState as AuthVm.AuthStates.Error).message) , Toast.LENGTH_SHORT).show()
             }
-            is  AuthVm.AuthStates.Loading->{
+            is AuthVm.AuthStates.Loading ->{
                 Toast.makeText(context,"Loading" , Toast.LENGTH_SHORT).show()
             }
-            is AuthVm.AuthStates.UnAuthenticated->{}
+            is AuthVm.AuthStates.UnAuthenticated ->{}
         }
 
     }

@@ -5,10 +5,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.yeminnaing.chatapp.presentation.authScreen.RegisterScreen
-import com.yeminnaing.chatapp.presentation.authScreen.SignInScreen
-import com.yeminnaing.chatapp.presentation.chatScreen.ChatScreen
-import com.yeminnaing.chatapp.presentation.homeScreen.HomeScreen
+import com.yeminnaing.chatapp.presentation.screens.authScreen.RegisterScreen
+import com.yeminnaing.chatapp.presentation.screens.authScreen.SignInScreen
+import com.yeminnaing.chatapp.presentation.screens.chatScreen.ChatScreen
+import com.yeminnaing.chatapp.presentation.screens.homeScreen.HomeScreen
+import com.yeminnaing.chatapp.presentation.screens.searchScreen.SearchScreen
 
 @Composable
 fun ChatScreensNavGraph() {
@@ -24,11 +25,15 @@ fun ChatScreensNavGraph() {
             RegisterScreen(navController)
         }
         composable<Screens.ChatScreen> { backStackEntry->
-            val chat = backStackEntry.toRoute<Screens.ChatScreen>()
+            val chat : Screens.ChatScreen  = backStackEntry.toRoute()
+
             ChatScreen(chat.id)
         }
         composable<Screens.HomeScreen> {
             HomeScreen(navController)
+        }
+        composable<Screens.SearchScreen> {
+            SearchScreen(navController)
         }
     }
 }

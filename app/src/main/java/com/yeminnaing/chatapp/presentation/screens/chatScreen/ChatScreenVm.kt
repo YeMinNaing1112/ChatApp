@@ -1,6 +1,7 @@
-package com.yeminnaing.chatapp.presentation.chatScreen
+package com.yeminnaing.chatapp.presentation.screens.chatScreen
 
 import androidx.lifecycle.ViewModel
+import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
 import com.yeminnaing.chatapp.data.repositories.MessageRepoImpl
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,12 +12,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatScreenVm @Inject constructor(
     private val mMessageRepoImpl: MessageRepoImpl,
+    private val mChatRepoImpl: ChatsRepoImpl
 ) : ViewModel() {
     private val _getMessageState = MutableStateFlow<GetMessageStates>(GetMessageStates.Empty)
     val getMessageStates = _getMessageState.asStateFlow()
 
 
-    fun listenForMessage(channelId: String) {
+    fun listenForMessage(chatId: String) {
         _getMessageState.value = GetMessageStates.Loading
         mMessageRepoImpl.listenForMessage(
             onSuccess = {
@@ -25,14 +27,15 @@ class ChatScreenVm @Inject constructor(
             onFailure = {
                 _getMessageState.value = GetMessageStates.Error(it)
             },
-            channelId = channelId
+            chatId = chatId
         )
     }
 
 
-    fun sendMessage(channelId: String, message: String) {
-        mMessageRepoImpl.sendMessage(channelId, message)
+    fun sendMessage(chatId: String, message: String) {
+        mMessageRepoImpl.sendMessage(chatId, message)
     }
+
 
     sealed interface GetMessageStates {
         data object Empty : GetMessageStates

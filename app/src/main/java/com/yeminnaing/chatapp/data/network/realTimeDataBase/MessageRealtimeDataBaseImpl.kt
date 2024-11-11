@@ -3,34 +3,34 @@ package com.yeminnaing.chatapp.data.network.realTimeDataBase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
 import java.util.UUID
 import javax.inject.Inject
 
 class MessageRealtimeDataBaseImpl @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase,
+    private val firebaseDatabase: DatabaseReference,
     private val firebaseAuth: FirebaseAuth,
 ) : MessageFireBaseApi {
-    override fun sendMessage(channelId: String, message: String) {
+    override fun sendMessage(chatId: String, message: String) {
         val messageText = MessageResponse(
-            id = firebaseDatabase.reference.push().key ?: UUID.randomUUID().toString(),
+           id = firebaseDatabase.push().key ?: UUID.randomUUID().toString(),
             senderId = firebaseAuth.currentUser?.uid ?: "",
-            message = message,
+            text = message,
             senderName = firebaseAuth.currentUser?.displayName ?: "",
-            senderImage = null,
-            imageUrl = null
+//            senderImage = null,
+//            imageUrl = null
         )
-        firebaseDatabase.reference.child("message").child(channelId).push().setValue(messageText)
+        firebaseDatabase.child("messages").child(chatId).push().setValue(messageText)
     }
 
     override fun listenForMessage(
         onSuccess: (messages: List<MessageResponse>) -> Unit,
         onFailure: (String) -> Unit,
-        channelId: String,
+        chatId: String,
     ) {
-        firebaseDatabase.reference.child("message").child(channelId).orderByChild("createdAt")
+        firebaseDatabase.child("messages").child(chatId).orderByChild("timestamp")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messageList = mutableListOf<MessageResponse>()
@@ -46,5 +46,47 @@ class MessageRealtimeDataBaseImpl @Inject constructor(
                 }
 
             })
+
+
     }
+
+    override fun getLastMessage(
+        onSuccess: (messages: MessageResponse) -> Unit,
+        onFailure: (String) -> Unit,
+        chatId: String,
+    ) {
+//        firebaseDatabase.child("messages").child(chatId).orderByChild("timeStamp").limitToLast(1)
+//            .addValueEventListener(object: ValueEventListener{
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                      val lastMessage = snapshot.getValue(MessageResponse::class.java)
+//                      lastMessage?.let { onSuccess(it) }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+//    }
+        firebaseDatabase.child("messages").child(chatId).orderByChild("timeStamp").limitToLast(1)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val messageSnapshot = snapshot.children.firstOrNull()
+                        val lastMessage = messageSnapshot?.getValue(MessageResponse::class.java)
+                        if (lastMessage != null) {
+                            onSuccess(lastMessage)
+                        } else {
+                            onFailure("Message parsing error")
+                        }
+                    } else {
+                        onFailure("No messages found")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    onFailure(error.message)
+                }
+            })}
+
 }

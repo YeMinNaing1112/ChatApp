@@ -1,5 +1,6 @@
-package com.yeminnaing.chatapp.presentation.chatScreen
+package com.yeminnaing.chatapp.presentation.screens.chatScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,36 +38,47 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
-import com.yeminnaing.chatapp.presentation.homeScreen.HomeScreenVm
 
 @Composable
-fun ChatScreen(id: String) {
+fun ChatScreen(chatId: String) {
     val viewModel: ChatScreenVm = hiltViewModel()
     val messageStates by viewModel.getMessageStates.collectAsState()
+    val context = LocalContext.current
+
+    val id = chatId.replace("\"", "")
+
+
+
     Scaffold {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)) {
-            LaunchedEffect(key1 = true) {
-                viewModel.listenForMessage(id)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            LaunchedEffect(viewModel) {
+                viewModel.listenForMessage(chatId = id)
             }
             when (messageStates) {
-               is ChatScreenVm.GetMessageStates.Empty -> {
+                is ChatScreenVm.GetMessageStates.Empty -> {
+                    Toast.makeText(context, "It's Empty", Toast.LENGTH_SHORT).show()
+                }
 
-               }
                 is ChatScreenVm.GetMessageStates.Error -> {
+                    Toast.makeText(context, "It's Error", Toast.LENGTH_SHORT).show()
 
                 }
-               is ChatScreenVm.GetMessageStates.Loading -> {
 
-               }
+                is ChatScreenVm.GetMessageStates.Loading -> {
+                    Toast.makeText(context, "It's Loading..", Toast.LENGTH_SHORT).show()
+
+                }
+
                 is ChatScreenVm.GetMessageStates.Success -> {
                     ChatScreenDesign(
                         messages = (messageStates as ChatScreenVm.GetMessageStates.Success).data,
                         onSendMessage = { message ->
                             viewModel.sendMessage(id, message)
-                        }
-                    )
+                        })
                 }
             }
 
@@ -76,8 +89,10 @@ fun ChatScreen(id: String) {
 
 @Composable
 fun ChatScreenDesign(
-    modifier: Modifier = Modifier, messages: List<MessageResponse>,
+    modifier: Modifier = Modifier,
+    messages: List<MessageResponse>,
     onSendMessage: (String) -> Unit,
+
 ) {
     val hideKeyboardController = LocalSoftwareKeyboardController.current
 
@@ -121,7 +136,7 @@ fun ChatScreenDesign(
 
 
 @Composable
-fun ChatList(modifier: Modifier = Modifier,message: MessageResponse) {
+fun ChatList(modifier: Modifier = Modifier, message: MessageResponse) {
     val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
     val bubbleColor = if (isCurrentUser) {
         Color.Blue
@@ -142,7 +157,7 @@ fun ChatList(modifier: Modifier = Modifier,message: MessageResponse) {
                 .align(alignment)
         ) {
             Text(
-                text = message.message, color = Color.White, modifier = Modifier.padding(8.dp)
+                text = message.text, color = Color.White, modifier = Modifier.padding(8.dp)
             )
         }
 
@@ -153,19 +168,26 @@ fun ChatList(modifier: Modifier = Modifier,message: MessageResponse) {
 @Preview
 @Composable
 private fun ChatListPrev() {
-   ChatList(message = MessageResponse()) 
+    ChatList(
+        message = MessageResponse(
+            senderId = "1",
+            senderName = "ZanZan",
+            text = "Hello"
+        )
+    )
 }
 
 @Preview
 @Composable
 private fun ChatScreenDesignPrev() {
-ChatScreenDesign(messages = listOf<MessageResponse>(
-MessageResponse(
-    id="1",
-    senderId = "",
-    message = "",
-    senderName = "",
-)
-)) {
-}
+    ChatScreenDesign(
+        messages = listOf<MessageResponse>(
+            MessageResponse(
+                senderId = "1",
+                senderName = "ZanZan",
+                text = "Hello"
+            )
+        ),
+        onSendMessage = {},
+    )
 }

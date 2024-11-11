@@ -2,10 +2,10 @@ package com.yeminnaing.chatapp.presentation.di
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
 import com.yeminnaing.chatapp.data.network.auth.AuthManagerImpl
-import com.yeminnaing.chatapp.data.network.realTimeDataBase.ChannelRealTimeDataBaseImpl
+import com.yeminnaing.chatapp.data.network.realTimeDataBase.ChatsRealTimeDataBaseImpl
 import com.yeminnaing.chatapp.data.network.realTimeDataBase.MessageRealtimeDataBaseImpl
 import dagger.Module
 import dagger.Provides
@@ -23,32 +23,41 @@ object AppModule {
         return FirebaseAuth.getInstance()
     }
 
+
+
     @Provides
     @Singleton
-    fun provideAuthManager(firebaseAuth: FirebaseAuth): AuthManagerImpl {
-        return AuthManagerImpl(firebaseAuth)
+    fun provideAuthManager(firebaseAuth: FirebaseAuth,firebaseDatabase: DatabaseReference): AuthManagerImpl {
+        return AuthManagerImpl(firebaseAuth,firebaseDatabase)
     }
 
 
     @Provides
-    @Singleton
-    fun provideFireBaseDataBase(): FirebaseDatabase {
-        return Firebase.database
+    fun provideFireBaseDataBaseReference(): DatabaseReference {
+        return Firebase.database.reference
     }
+
+
 
     @Provides
     @Singleton
-    fun provideChannelRealTimeDataBaseImpl(firebase: FirebaseDatabase): ChannelRealTimeDataBaseImpl {
-        return ChannelRealTimeDataBaseImpl(
-            firebase
+    fun provideChatRealTimeDataBaseImpl(firebase: DatabaseReference,firebaseAuth: FirebaseAuth): ChatsRealTimeDataBaseImpl {
+        return ChatsRealTimeDataBaseImpl(
+            firebase,firebaseAuth
         )
     }
 
+
+
     @Provides
     @Singleton
-    fun provideMessageRealTimeDataBaseImpl(firebase: FirebaseDatabase,firebaseAuth: FirebaseAuth): MessageRealtimeDataBaseImpl {
+    fun provideMessageRealTimeDataBaseImpl(firebase: DatabaseReference,firebaseAuth: FirebaseAuth): MessageRealtimeDataBaseImpl {
         return MessageRealtimeDataBaseImpl(
             firebase,firebaseAuth
         )
     }
 }
+
+
+
+ 

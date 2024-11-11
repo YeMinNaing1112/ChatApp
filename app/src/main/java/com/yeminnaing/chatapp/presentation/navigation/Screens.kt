@@ -11,4 +11,6 @@ sealed class Screens {
     data class ChatScreen(val id:String) : Screens()
     @Serializable
     data object HomeScreen:Screens()
+    @Serializable
+    data object SearchScreen:Screens()
 }

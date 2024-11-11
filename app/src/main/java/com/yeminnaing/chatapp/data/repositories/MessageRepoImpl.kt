@@ -8,15 +8,23 @@ import javax.inject.Inject
 class MessageRepoImpl @Inject constructor(
     private val messageRealtimeDataBaseImpl: MessageRealtimeDataBaseImpl,
 ) : MessageRepo {
-    override fun sendMessage(channelId: String, message: String) {
-        messageRealtimeDataBaseImpl.sendMessage(channelId, message)
+    override fun sendMessage(chatId: String, message: String) {
+        messageRealtimeDataBaseImpl.sendMessage(chatId, message)
     }
 
     override fun listenForMessage(
         onSuccess: (messages: List<MessageResponse>) -> Unit,
         onFailure: (String) -> Unit,
-        channelId: String,
+        chatId: String,
     ) {
-        messageRealtimeDataBaseImpl.listenForMessage(onSuccess, onFailure, channelId)
+        messageRealtimeDataBaseImpl.listenForMessage(onSuccess, onFailure, chatId)
+    }
+
+    override fun getLastMessage(
+        onSuccess: (messages: MessageResponse) -> Unit,
+        onFailure: (String) -> Unit,
+        chatId: String,
+    ) {
+        messageRealtimeDataBaseImpl.getLastMessage(onSuccess, onFailure, chatId)
     }
 }

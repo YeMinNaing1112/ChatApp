@@ -1,4 +1,4 @@
-package com.yeminnaing.chatapp.presentation.authScreen
+package com.yeminnaing.chatapp.presentation.screens.authScreen
 
 import androidx.lifecycle.ViewModel
 import com.yeminnaing.chatapp.data.repositories.AuthRepoImpl
@@ -36,9 +36,9 @@ class AuthVm @Inject constructor(
               email = email,
               password = password,
               onSuccess = {
-                  _authState.value=AuthStates.Authenticated
+                  _authState.value= AuthStates.Authenticated
               }, onFailure = {
-                _authState.value=AuthStates.Error(it)
+                _authState.value= AuthStates.Error(it)
             }
         )
     }
@@ -53,15 +53,15 @@ class AuthVm @Inject constructor(
             password=password,
             userName = name,
             onSuccess = {
-                _authState.value=AuthStates.Authenticated
+                _authState.value= AuthStates.Authenticated
             }, onFailure = {
-                _authState.value=AuthStates.Error(it)
+                _authState.value= AuthStates.Error(it)
             }
         )
     }
     fun signOut(){
        mAuthRepoImpl.signOut()
-        _authState.value=AuthStates.UnAuthenticated
+        _authState.value= AuthStates.UnAuthenticated
     }
     sealed class AuthStates() {
         data object Authenticated : AuthStates()
