@@ -162,7 +162,7 @@ fun SignInScreenDesign(
                 TextButton(onClick = {
                     navigation()
                 }) {
-                    Text(text = "SignIn")
+                    Text(text = "Register")
                 }
             }
         }

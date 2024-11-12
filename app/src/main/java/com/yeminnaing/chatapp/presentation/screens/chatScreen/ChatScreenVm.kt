@@ -12,7 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatScreenVm @Inject constructor(
     private val mMessageRepoImpl: MessageRepoImpl,
-    private val mChatRepoImpl: ChatsRepoImpl
 ) : ViewModel() {
     private val _getMessageState = MutableStateFlow<GetMessageStates>(GetMessageStates.Empty)
     val getMessageStates = _getMessageState.asStateFlow()

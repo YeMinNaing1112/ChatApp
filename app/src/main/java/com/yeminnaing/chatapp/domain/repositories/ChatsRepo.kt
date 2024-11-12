@@ -17,6 +17,6 @@ interface ChatsRepo {
         onSuccess: (UserResponse) -> Unit,
         onFailure: (String) -> Unit,
     )
-    fun addLastMessageToChat(lastMessage:String,chatId:String)
+
 }
 

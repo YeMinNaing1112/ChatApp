@@ -9,6 +9,5 @@ interface ChatsFireBaseApi {
     fun getChats(onSuccess:(List<ChatResponse>)-> Unit ,onFailure: (String) -> Unit)
     fun createChat(chatId: String, targetUserId:String)
     fun findUserByEmail(email:String, onSuccess: (UserResponse) -> Unit, onFailure: (String) -> Unit)
-    fun addLastMessageToChat(lastMessage:String,chatId:String)
 
 }

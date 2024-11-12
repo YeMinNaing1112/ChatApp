@@ -32,7 +32,7 @@ class ChatsRealTimeDataBaseImpl @Inject constructor(
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+
                 }
 
             })
@@ -49,7 +49,6 @@ class ChatsRealTimeDataBaseImpl @Inject constructor(
                    val newChat = ChatResponse(
                        chatId = chatId,
                        participants = mapOf(currentUserId to true, targetUserId to true),
-                       lastMessage = ""
                    )
                    firebaseDatabase.child("chats").child(chatId).setValue(newChat)
                }
@@ -60,28 +59,6 @@ class ChatsRealTimeDataBaseImpl @Inject constructor(
            }
 
        })
-    }
-    override fun addLastMessageToChat(lastMessage: String,chatId:String) {
-        firebaseDatabase.child("chats").child(chatId)
-            .addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val chat= snapshot.getValue(ChatResponse::class.java)
-                val editChat= chat?.let {
-                    ChatResponse(
-                        chatId=chatId,
-                        lastMessage=lastMessage,
-                        participants = it.participants,
-                    )
-                }
-                firebaseDatabase.child("chats").child(chatId).setValue(editChat)
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
     }
 
     override fun findUserByEmail(

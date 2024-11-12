@@ -60,7 +60,7 @@ fun ChatScreen(chatId: String) {
             }
             when (messageStates) {
                 is ChatScreenVm.GetMessageStates.Empty -> {
-                    Toast.makeText(context, "It's Empty", Toast.LENGTH_SHORT).show()
+
                 }
 
                 is ChatScreenVm.GetMessageStates.Error -> {
@@ -69,7 +69,6 @@ fun ChatScreen(chatId: String) {
                 }
 
                 is ChatScreenVm.GetMessageStates.Loading -> {
-                    Toast.makeText(context, "It's Loading..", Toast.LENGTH_SHORT).show()
 
                 }
 

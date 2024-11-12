@@ -247,7 +247,7 @@ private fun HomeScreenDesignPrev() {
     HomeScreenDesign(chatsStates = HomeScreenVm.GetChatsStates.Success(
         listOf(
             ChatResponse(
-                chatId = "1", lastMessage = "Hello", mapOf(
+                chatId = "1", mapOf(
                     "User1" to true, "User2" to true
                 )
             )

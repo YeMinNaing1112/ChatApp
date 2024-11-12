@@ -29,7 +29,4 @@ private val dataBaseImpl: ChatsRealTimeDataBaseImpl
         dataBaseImpl.findUserByEmail(email, onSuccess, onFailure)
     }
 
-    override fun addLastMessageToChat(lastMessage: String, chatId: String) {
-        dataBaseImpl.addLastMessageToChat(lastMessage, chatId)
-    }
 }
