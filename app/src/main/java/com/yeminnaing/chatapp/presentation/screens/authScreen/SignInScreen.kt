@@ -35,12 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.yeminnaing.chatapp.presentation.navigation.Screens
+import com.yeminnaing.chatapp.presentation.navigation.Destination
 
 
 
 @Composable
-fun SignInScreen(navController: NavHostController) {
+fun SignInScreen() {
     val viewModel: AuthVm = hiltViewModel()
     val context = LocalContext.current
     val authState by viewModel.authStates.collectAsState()
@@ -48,13 +48,7 @@ fun SignInScreen(navController: NavHostController) {
     LaunchedEffect(authState) {
         when (authState) {
             AuthVm.AuthStates.Authenticated -> {
-                navController.navigate(Screens.HomeScreen) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = false
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
+                viewModel.login()
             }
 
             AuthVm.AuthStates.Empty -> {}
@@ -72,13 +66,7 @@ fun SignInScreen(navController: NavHostController) {
     SignInScreenDesign(logIn = {email, password ->
         viewModel.logIn(email, password)
     }, navigation = {
-        navController.navigate(Screens.RegisterScreen) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = false
-                inclusive = true
-            }
-            launchSingleTop = true
-        }
+        viewModel.navigateToRegisterScreen()
     })
 }
 

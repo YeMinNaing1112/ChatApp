@@ -36,13 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.yeminnaing.chatapp.R
-import com.yeminnaing.chatapp.presentation.navigation.Screens
 
 @Composable
-fun SearchScreen(navController: NavHostController) {
+fun SearchScreen() {
     val viewmodel: SearchScreenVm = hiltViewModel()
     val searchState by viewmodel.searchState.collectAsState()
 
@@ -51,14 +49,7 @@ fun SearchScreen(navController: NavHostController) {
     }, createChatId = {
         viewmodel.createChatId(it)
     }, navigateChatScreen = {
-        navController.navigate(Screens.ChatScreen(id = viewmodel.chatId)) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                inclusive = true
-                saveState = false
-            }
-            launchSingleTop = true
-        }
-
+        viewmodel.navigateToChatScreen()
     })
 
 }

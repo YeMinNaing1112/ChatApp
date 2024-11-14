@@ -1,13 +1,17 @@
 package com.yeminnaing.chatapp.presentation.screens.searchScreen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
 import com.yeminnaing.chatapp.domain.responses.UserResponse
+import com.yeminnaing.chatapp.presentation.navigation.Destination
+import com.yeminnaing.chatapp.presentation.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -15,30 +19,25 @@ import javax.inject.Inject
 class SearchScreenVm @Inject constructor(
     private val chatsRepoImpl: ChatsRepoImpl,
     private val auth: FirebaseAuth,
+    private val navigator: Navigator
 ) : ViewModel() {
     private val _searchState = MutableStateFlow<SearchStates>(SearchStates.Empty)
     val searchState = _searchState.asStateFlow()
 
     lateinit var chatId: String
 
-
-//    private val _searchText= MutableStateFlow("")
-//    private val searchText=_searchText.asStateFlow()
-//
-//    fun onSearchTextChange(text:String){
-//        _searchText.value= text
-//    }
-
-
-//    init {
-//        viewModelScope.launch {
-//            searchText.debounce(300)
-//                .distinctUntilChanged()
-//                .collect{ query->
-//
-//                }
-//        }
-//    }
+    fun navigateToChatScreen(){
+        viewModelScope.launch {
+            navigator.navigate(destination= Destination.ChatScreen(id=chatId),
+                navOption = {
+                    popUpTo(Destination.HomeScreen){
+                        inclusive=true
+                    }
+                    launchSingleTop=true
+                }
+            )
+        }
+    }
 
 
     fun createChatId(targetUser: String) {

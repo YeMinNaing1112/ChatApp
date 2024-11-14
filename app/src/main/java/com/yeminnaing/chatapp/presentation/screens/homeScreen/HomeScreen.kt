@@ -41,39 +41,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.yeminnaing.chatapp.domain.responses.ChatResponse
-import com.yeminnaing.chatapp.presentation.navigation.Screens
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen() {
     val viewModel: HomeScreenVm = hiltViewModel()
     val chatsStates by viewModel.getChatsStates.collectAsState()
     val getLastMessageStates by viewModel.getLastMessage.collectAsState()
     HomeScreenDesign(chatsStates, getLastMessageStates, addChannel = {
 //        viewModel.addChannel(it)
-    }, navigateToChatScreen = { id ->
-        navController.navigate(Screens.ChatScreen(id = id)) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                inclusive = true
-                saveState = false
-            }
-            launchSingleTop = true
+    }, navigateToChatScreen =
+    viewModel::navigateToChatScreen,
+        navigateToSearchScreen =
+        viewModel::navigateToSearchScreen,
+        getLastMessage = {
+            viewModel.upDateChatWithLastMessage(it)
         }
-    }, navigateToSearchScreen = {
-        navController.navigate(Screens.SearchScreen) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                inclusive = true
-                saveState = false
-            }
-            launchSingleTop = true
-        }
-    }, getLastMessage = {
-        viewModel.upDateChatWithLastMessage(it)
-    }
 
 
     )
@@ -153,11 +139,12 @@ fun HomeScreenDesign(
                                         )
                                     }
                                     when (getLastMessageStates) {
-                                        is HomeScreenVm.GetLastMessage.Success ->{
+                                        is HomeScreenVm.GetLastMessage.Success -> {
                                             Text(
                                                 text = getLastMessageStates.message.text,
                                             )
                                         }
+
                                         else -> {}
                                     }
 

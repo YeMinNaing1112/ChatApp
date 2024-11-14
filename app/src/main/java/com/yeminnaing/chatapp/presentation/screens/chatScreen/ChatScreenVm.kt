@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
 import com.yeminnaing.chatapp.data.repositories.MessageRepoImpl
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
+import com.yeminnaing.chatapp.presentation.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,6 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatScreenVm @Inject constructor(
     private val mMessageRepoImpl: MessageRepoImpl,
+    private val navigator: Navigator
 ) : ViewModel() {
     private val _getMessageState = MutableStateFlow<GetMessageStates>(GetMessageStates.Empty)
     val getMessageStates = _getMessageState.asStateFlow()

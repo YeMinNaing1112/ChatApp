@@ -1,19 +1,24 @@
 package com.yeminnaing.chatapp.presentation.screens.homeScreen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
 import com.yeminnaing.chatapp.data.repositories.MessageRepoImpl
 import com.yeminnaing.chatapp.domain.responses.ChatResponse
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
+import com.yeminnaing.chatapp.presentation.navigation.Destination
+import com.yeminnaing.chatapp.presentation.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenVm @Inject constructor(
     private val chatsRepoImpl: ChatsRepoImpl,
     private val mMessageRepoImpl: MessageRepoImpl,
+    private val navigator: Navigator
 ) : ViewModel() {
     private val _getChatsStates = MutableStateFlow<GetChatsStates>(GetChatsStates.Empty)
     val getChatsStates = _getChatsStates.asStateFlow()
@@ -24,6 +29,35 @@ class HomeScreenVm @Inject constructor(
     init {
         getChats()
     }
+
+
+    fun navigateToChatScreen(id:String){
+        viewModelScope.launch {
+            navigator.navigate(destination=Destination.ChatScreen(id=id),
+                navOption = {
+                    popUpTo(Destination.HomeScreen){
+                        inclusive=true
+                    }
+                    launchSingleTop=true
+                }
+            )
+        }
+
+    }
+
+    fun navigateToSearchScreen(){
+        viewModelScope.launch {
+            navigator.navigate(destination=Destination.SearchScreen,
+                navOption = {
+                    popUpTo(Destination.HomeScreen){
+                        inclusive=true
+                    }
+                    launchSingleTop=true
+                }
+            )
+        }
+    }
+
 
     private fun getChats() {
         _getChatsStates.value = GetChatsStates.Loading

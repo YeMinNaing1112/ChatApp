@@ -34,12 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import com.yeminnaing.chatapp.presentation.navigation.Screens
 
 @Composable
-fun RegisterScreen(navController: NavController ) {
+fun RegisterScreen() {
     val viewModel: AuthVm = hiltViewModel()
     val context = LocalContext.current
     val authState by viewModel.authStates.collectAsState()
@@ -47,37 +44,32 @@ fun RegisterScreen(navController: NavController ) {
     LaunchedEffect(authState) {
         when (authState) {
             AuthVm.AuthStates.Authenticated -> {
-                navController.navigate(Screens.HomeScreen) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = false
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
+                viewModel.login()
             }
 
             AuthVm.AuthStates.Empty -> {}
-            is AuthVm.AuthStates.Error ->{
-                Toast.makeText(context,((authState as AuthVm.AuthStates.Error).message) , Toast.LENGTH_SHORT).show()
+            is AuthVm.AuthStates.Error -> {
+                Toast.makeText(
+                    context,
+                    ((authState as AuthVm.AuthStates.Error).message),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            is AuthVm.AuthStates.Loading ->{
-                Toast.makeText(context,"Loading" , Toast.LENGTH_SHORT).show()
+
+            is AuthVm.AuthStates.Loading -> {
+                Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
             }
-            is AuthVm.AuthStates.UnAuthenticated ->{}
+
+            is AuthVm.AuthStates.UnAuthenticated -> {}
         }
 
     }
 
-    RegisterScreenDesign(register = {name,email ,password ->
-        viewModel.register(email=email, name = name, password = password)
+    RegisterScreenDesign(register = { name, email, password ->
+        viewModel.register(email = email, name = name, password = password)
     }, navigation = {
-        navController.navigate(Screens.SignInScreen) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = false
-                inclusive = true
-            }
-            launchSingleTop = true
-        }
+
+        viewModel.navigateToSignInScreen()
     })
 }
 
@@ -110,85 +102,84 @@ fun RegisterScreenDesign(
     var name by remember {
         mutableStateOf("")
     }
-Box(modifier = modifier.fillMaxSize()){
-    Card(modifier = modifier
-        .align(Alignment.Center)
-        .padding(16.dp)
-        .clip(RoundedCornerShape(16.dp))
+    Box(modifier = modifier.fillMaxSize()) {
+        Card(
+            modifier = modifier
+                .align(Alignment.Center)
+                .padding(16.dp)
+                .clip(RoundedCornerShape(16.dp))
 
-    ){
-        Column(
-            modifier = modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                placeholder = { Text(text = "Name") },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        emailFocusRequester.requestFocus()
-                    }
-                ),
-                modifier = modifier
-                    .focusRequester(nameRequester)
-                    .padding(top = 10.dp)
-            )
-
-            TextField(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = { Text(text = "Email") },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        passwordRequester.requestFocus()
-                    }
-                ),
-                modifier = modifier
-                    .focusRequester(emailFocusRequester)
-                    .padding(top = 10.dp)
-            )
-
-
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                placeholder = { Text(text = "Password") },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                    }
+            Column(
+                modifier = modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                TextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    placeholder = { Text(text = "Name") },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            emailFocusRequester.requestFocus()
+                        }
+                    ),
+                    modifier = modifier
+                        .focusRequester(nameRequester)
+                        .padding(top = 10.dp)
                 )
-                ,modifier=modifier.padding(top = 10.dp)
-            )
 
-            Button(onClick = {
-                register(name, email, password)
-            },modifier.padding(top = 16.dp)) {
-                Text(text = "Register")
-            }
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    placeholder = { Text(text = "Email") },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            passwordRequester.requestFocus()
+                        }
+                    ),
+                    modifier = modifier
+                        .focusRequester(emailFocusRequester)
+                        .padding(top = 10.dp)
+                )
 
-            Text(text = "If you already have an account ",modifier.padding(top = 16.dp))
-            TextButton(onClick = {
-                navigation()
-            }) {
-                Text(text = "LoginHere")
+
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    placeholder = { Text(text = "Password") },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                        }
+                    ), modifier = modifier.padding(top = 10.dp)
+                )
+
+                Button(onClick = {
+                    register(name, email, password)
+                }, modifier.padding(top = 16.dp)) {
+                    Text(text = "Register")
+                }
+
+                Text(text = "If you already have an account ", modifier.padding(top = 16.dp))
+                TextButton(onClick = {
+                    navigation()
+                }) {
+                    Text(text = "LoginHere")
+                }
             }
         }
     }
-}
-
 
 
 }
@@ -197,7 +188,7 @@ Box(modifier = modifier.fillMaxSize()){
 @Preview
 @Composable
 private fun RegisterScreenDesignPrev() {
-    RegisterScreenDesign(register = {name, email, password ->  },
+    RegisterScreenDesign(register = { name, email, password -> },
 
         navigation = {})
 }
