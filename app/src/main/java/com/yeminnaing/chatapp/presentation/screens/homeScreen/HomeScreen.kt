@@ -1,5 +1,7 @@
 package com.yeminnaing.chatapp.presentation.screens.homeScreen
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +53,10 @@ fun HomeScreen() {
     val viewModel: HomeScreenVm = hiltViewModel()
     val chatsStates by viewModel.getChatsStates.collectAsState()
     val getLastMessageStates by viewModel.getLastMessage.collectAsState()
+    val context= LocalContext.current
+    BackHandler {
+        (context as? Activity)?.finish()
+    }
     HomeScreenDesign(chatsStates, getLastMessageStates, addChannel = {
 //        viewModel.addChannel(it)
     }, navigateToChatScreen =

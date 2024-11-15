@@ -1,13 +1,16 @@
 package com.yeminnaing.chatapp.presentation.screens.chatScreen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
 import com.yeminnaing.chatapp.data.repositories.MessageRepoImpl
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
+import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +35,18 @@ class ChatScreenVm @Inject constructor(
         )
     }
 
-
+      fun navigateBackToHome(){
+          viewModelScope.launch {
+              navigator.navigate(destination= Destination.HomeScreen,
+                  navOption = {
+                      popUpTo(Destination.ChatScreen){
+                          inclusive=true
+                      }
+                      launchSingleTop=true
+                  }
+              )
+          }
+      }
     fun sendMessage(chatId: String, message: String) {
         mMessageRepoImpl.sendMessage(chatId, message)
     }

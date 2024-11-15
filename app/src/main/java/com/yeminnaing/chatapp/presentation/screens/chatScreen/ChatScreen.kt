@@ -1,6 +1,7 @@
 package com.yeminnaing.chatapp.presentation.screens.chatScreen
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,9 @@ fun ChatScreen(chatId: String) {
     val context = LocalContext.current
 
     val id = chatId.replace("\"", "")
-
+  BackHandler {
+      viewModel.navigateBackToHome()
+  }
 
 
     Scaffold {

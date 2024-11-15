@@ -30,7 +30,7 @@ class SearchScreenVm @Inject constructor(
         viewModelScope.launch {
             navigator.navigate(destination= Destination.ChatScreen(id=chatId),
                 navOption = {
-                    popUpTo(Destination.HomeScreen){
+                    popUpTo(Destination.SearchScreen){
                         inclusive=true
                     }
                     launchSingleTop=true
