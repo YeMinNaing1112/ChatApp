@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.yeminnaing.chatapp.R
+import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
 fun SearchScreen() {
@@ -147,12 +148,14 @@ fun SearchScreenDesign(
                 }
 
                 is SearchScreenVm.SearchStates.Success -> {
-                    Text(text = searchStates.users.username, modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            createChatId(searchStates.users.username)
-                            navigateChatScreen()
-                        })
+                    Text(text = searchStates.users.username,
+                        style = AppTheme.typography.body
+                        , modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                createChatId(searchStates.users.username)
+                                navigateChatScreen()
+                            })
                 }
 
                 else -> {}

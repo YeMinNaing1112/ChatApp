@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.yeminnaing.chatapp.presentation.navigation.ChatScreensNavGraph
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
-import com.yeminnaing.chatapp.ui.theme.ChatAppTheme
+import com.yeminnaing.chatapp.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            ChatAppTheme {
+            AppTheme {
 
                 ChatScreensNavGraph(navigator)
             }
