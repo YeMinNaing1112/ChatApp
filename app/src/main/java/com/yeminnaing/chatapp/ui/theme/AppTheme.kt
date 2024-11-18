@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 private val darkColorScheme = AppColorSchema(
-    background = Color.Black,
+    background = Color(0xFF110E15),
     onBackground = Purple80,
     primary = PurpleGrey40,
     onPrimary = PurpleGrey80,
