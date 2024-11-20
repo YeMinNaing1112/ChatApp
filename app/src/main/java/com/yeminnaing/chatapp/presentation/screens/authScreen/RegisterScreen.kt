@@ -1,6 +1,7 @@
 package com.yeminnaing.chatapp.presentation.screens.authScreen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
 fun RegisterScreen() {
@@ -102,7 +103,11 @@ fun RegisterScreenDesign(
     var name by remember {
         mutableStateOf("")
     }
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(AppTheme.colorScheme.primary)
+    ) {
         Card(
             modifier = modifier
                 .align(Alignment.Center)
@@ -167,11 +172,17 @@ fun RegisterScreenDesign(
 
                 Button(onClick = {
                     register(name, email, password)
-                }, modifier.padding(top = 16.dp)) {
+                }, modifier.padding(top = 16.dp)
+                ) {
                     Text(text = "Register")
                 }
 
-                Text(text = "If you already have an account ", modifier.padding(top = 16.dp))
+                Text(
+                    text = "If you already have an account ",
+                    modifier
+                        .padding(top = 16.dp)
+
+                )
                 TextButton(onClick = {
                     navigation()
                 }) {

@@ -1,6 +1,7 @@
 package com.yeminnaing.chatapp.presentation.screens.authScreen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.yeminnaing.chatapp.presentation.navigation.Destination
-
+import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 
 @Composable
@@ -93,12 +95,15 @@ fun SignInScreenDesign(
     var password by remember {
         mutableStateOf("")
     }
-    Box(modifier = modifier.fillMaxSize()){
+    Box(modifier = modifier.fillMaxSize()
+        .background(AppTheme.colorScheme.primary)
+    ){
         Card(
             modifier = modifier
                 .align(Alignment.Center)
                 .padding(16.dp)
                 .clip(RoundedCornerShape(16.dp))
+
 
         ) {
             Column(
@@ -142,7 +147,8 @@ fun SignInScreenDesign(
 
                 Button(onClick = {
                     logIn(email, password)
-                }, modifier.padding(top = 16.dp)) {
+                }, modifier.padding(top = 16.dp)
+                ) {
                     Text(text = "Login")
                 }
 

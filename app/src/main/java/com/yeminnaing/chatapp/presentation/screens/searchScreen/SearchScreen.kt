@@ -1,9 +1,11 @@
 package com.yeminnaing.chatapp.presentation.screens.searchScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.yeminnaing.chatapp.R
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
@@ -74,7 +75,10 @@ fun SearchScreenDesign(
     }
 
     Scaffold {
-        Column {
+        Column(modifier = modifier
+            .background(AppTheme.colorScheme.primary)
+            .fillMaxSize()) {
+
             //region SearchBar
 
             Row(
@@ -86,6 +90,7 @@ fun SearchScreenDesign(
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                     contentDescription = "Back",
+                    tint = AppTheme.colorScheme.secondary,
                     modifier = modifier.padding(start = 16.dp, top = 10.dp)
                 )
 
@@ -97,8 +102,8 @@ fun SearchScreenDesign(
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email, imeAction = ImeAction.Search
                     ),
-                    textStyle = TextStyle(fontSize = 24.sp, color = Color.Black),
-                    cursorBrush = SolidColor(Color.Black.copy(alpha = 1f)), // Change cursor color
+                    textStyle = TextStyle(fontSize = 24.sp, color = AppTheme.colorScheme.secondary),
+                    cursorBrush = SolidColor(AppTheme.colorScheme.secondary), // Change cursor color
                     decorationBox = { innerText ->
                         Box(
                             modifier = Modifier.fillMaxWidth(),
@@ -107,7 +112,7 @@ fun SearchScreenDesign(
                             if (search.text.isEmpty()) {
                                 Text(
                                     text = "Search",
-                                    color = Color.Gray,
+                                    color = AppTheme.colorScheme.secondary,
                                     style = TextStyle(fontSize = 24.sp),
 
                                     )
@@ -136,11 +141,11 @@ fun SearchScreenDesign(
 
             when (searchStates) {
                 is SearchScreenVm.SearchStates.Empty -> {
-                    Text(text = "It Empty")
+//                    Text(text = "It Empty")
                 }
 
                 is SearchScreenVm.SearchStates.Error -> {
-                    Text(text = "Error")
+//                    Text(text = "Error")
                 }
 
                 is SearchScreenVm.SearchStates.Loading -> {
@@ -149,8 +154,7 @@ fun SearchScreenDesign(
 
                 is SearchScreenVm.SearchStates.Success -> {
                     Text(text = searchStates.users.username,
-                        style = AppTheme.typography.body
-                        , modifier = Modifier
+                        style = AppTheme.typography.body, color = AppTheme.colorScheme.secondary, modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 createChatId(searchStates.users.username)

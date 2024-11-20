@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
+import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
 fun ChatScreen(chatId: String) {
@@ -47,16 +48,20 @@ fun ChatScreen(chatId: String) {
     val context = LocalContext.current
 
     val id = chatId.replace("\"", "")
-  BackHandler {
-      viewModel.navigateBackToHome()
-  }
+    BackHandler {
+        viewModel.navigateBackToHome()
+    }
 
 
     Scaffold {
         Column(
             modifier = Modifier
+                .background(AppTheme.colorScheme.primary)
                 .fillMaxSize()
                 .padding(it)
+                .fillMaxSize()
+
+
         ) {
             LaunchedEffect(viewModel) {
                 viewModel.listenForMessage(chatId = id)
@@ -95,7 +100,7 @@ fun ChatScreenDesign(
     messages: List<MessageResponse>,
     onSendMessage: (String) -> Unit,
 
-) {
+    ) {
     val hideKeyboardController = LocalSoftwareKeyboardController.current
 
     val msg = remember {
@@ -141,9 +146,9 @@ fun ChatScreenDesign(
 fun ChatList(modifier: Modifier = Modifier, message: MessageResponse) {
     val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
     val bubbleColor = if (isCurrentUser) {
-        Color.Blue
+        AppTheme.colorScheme.onPrimary
     } else {
-        Color.Green
+       AppTheme.colorScheme.background
     }
     Box(
         modifier = Modifier
@@ -159,7 +164,7 @@ fun ChatList(modifier: Modifier = Modifier, message: MessageResponse) {
                 .align(alignment)
         ) {
             Text(
-                text = message.text, color = Color.White, modifier = Modifier.padding(8.dp)
+                text = message.text, color = Color.Black, modifier = Modifier.padding(8.dp)
             )
         }
 

@@ -13,19 +13,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 private val darkColorScheme = AppColorSchema(
-    background = Color(0xFF110E15),
+    background = DARK_BACKGROUND,
     onBackground = Purple80,
-    primary = PurpleGrey40,
-    onPrimary = PurpleGrey80,
-    secondary = Pink40,
+    primary = DARK_PRIMARY,
+    onPrimary = DARK_ON_PRIMARY,
+    secondary = Color.White,
     onSecondary = Pink80
 )
 private val lightColorScheme = AppColorSchema(
     background = Color.White,
     onBackground = Purple80,
-    primary = PurpleGrey40,
-    onPrimary = PurpleGrey80,
-    secondary = Pink40,
+    primary = LIGHT_PRIMARY ,
+    onPrimary = LIGHT_ON_PRIMARY,
+    secondary = Color.Black,
     onSecondary = Pink80
 )
 

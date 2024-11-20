@@ -47,6 +47,7 @@ import androidx.navigation.NavHostController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.yeminnaing.chatapp.domain.responses.ChatResponse
+import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
 fun HomeScreen() {
@@ -87,6 +88,7 @@ fun HomeScreenDesign(
     }
     val sheetState = rememberModalBottomSheetState()
     Scaffold(
+        modifier = Modifier.background(AppTheme.colorScheme.primary),
         floatingActionButton = {
             FloatingActionButton(onClick = { addChannelDialog.value = true }) {
                 Text(text = "+")
@@ -96,8 +98,10 @@ fun HomeScreenDesign(
     ) {
         Column(
             modifier = Modifier
+                .background(AppTheme.colorScheme.primary)
                 .padding(it)
                 .fillMaxSize()
+
         ) {
 
             TopAppBar(navigateToSearchScreen = { navigateToSearchScreen() })
@@ -123,7 +127,7 @@ fun HomeScreenDesign(
 
                             }) {
                                 findTargetUser(chat.participants)?.let { targetUser ->
-                                    Text(
+                                    Text(color = AppTheme.colorScheme.secondary,
                                         text = targetUser.firstOrNull().toString(),
                                         modifier = Modifier
                                             .padding(16.dp)
@@ -140,13 +144,13 @@ fun HomeScreenDesign(
 
                                 Column(modifier = Modifier.weight(1f)) {
                                     findTargetUser(chat.participants)?.let { targetUser ->
-                                        Text(
+                                        Text(color = AppTheme.colorScheme.secondary,
                                             text = targetUser,
                                         )
                                     }
                                     when (getLastMessageStates) {
                                         is HomeScreenVm.GetLastMessage.Success -> {
-                                            Text(
+                                            Text( color = AppTheme.colorScheme.secondary,
                                                 text = getLastMessageStates.message.text,
                                             )
                                         }
@@ -220,6 +224,7 @@ fun TopAppBar(modifier: Modifier = Modifier, navigateToSearchScreen: () -> Unit)
             modifier = Modifier
                 .padding(start = 16.dp)
                 .size(45.dp)
+                , tint = AppTheme.colorScheme.secondary
         )
 
         Icon(imageVector = Icons.Default.Search,
@@ -229,7 +234,7 @@ fun TopAppBar(modifier: Modifier = Modifier, navigateToSearchScreen: () -> Unit)
                 .size(45.dp)
                 .clickable {
                     navigateToSearchScreen()
-                })
+                } , tint = AppTheme.colorScheme.secondary)
     }
 }
 
