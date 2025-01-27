@@ -1,5 +1,6 @@
 package com.yeminnaing.chatapp.data.repositories
 
+import com.yeminnaing.chatapp.data.network.auth.AuthManager
 import com.yeminnaing.chatapp.data.network.auth.AuthManagerImpl
 import com.yeminnaing.chatapp.domain.repositories.AuthRepo
 import javax.inject.Inject

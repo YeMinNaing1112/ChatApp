@@ -1,13 +1,17 @@
 package com.yeminnaing.chatapp.presentation.screens.chatScreen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
-import com.yeminnaing.chatapp.data.repositories.MessageRepoImpl
+import com.google.auth.oauth2.GoogleCredentials
+import com.yeminnaing.chatapp.R
+import com.yeminnaing.chatapp.data.notificationManager.NotificationService
+import com.yeminnaing.chatapp.domain.repositories.MessageRepo
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
 import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,12 +19,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatScreenVm @Inject constructor(
-    private val mMessageRepoImpl: MessageRepoImpl,
-    private val navigator: Navigator
+    private val mMessageRepoImpl: MessageRepo,
+    private val navigator: Navigator,
+    private val notificationService: NotificationService,
+    @ApplicationContext val context: Context
 ) : ViewModel() {
     private val _getMessageState = MutableStateFlow<GetMessageStates>(GetMessageStates.Empty)
     val getMessageStates = _getMessageState.asStateFlow()
 
+    fun getNotification(name: String, message: String) {
+        notificationService.showNotification(name, message)
+    }
 
     fun listenForMessage(chatId: String) {
         _getMessageState.value = GetMessageStates.Loading
@@ -35,21 +44,40 @@ class ChatScreenVm @Inject constructor(
         )
     }
 
-      fun navigateBackToHome(){
-          viewModelScope.launch {
-              navigator.navigate(destination= Destination.HomeScreen,
-                  navOption = {
-                      popUpTo(Destination.ChatScreen){
-                          inclusive=true
-                      }
-                      launchSingleTop=true
-                  }
-              )
-          }
-      }
-    fun sendMessage(chatId: String, message: String) {
-        mMessageRepoImpl.sendMessage(chatId, message)
+    fun navigateBackToHome() {
+        viewModelScope.launch {
+            navigator.navigate(destination = Destination.HomeScreen,
+                navOption = {
+                    popUpTo(Destination.ChatScreen) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            )
+        }
     }
+
+    fun sendMessage(chatId: String, message: String) {
+        mMessageRepoImpl.sendMessage(chatId, message,context)
+    }
+
+
+
+//    fun subscribeToConversation(chatId: String){
+//        viewModelScope.launch {
+//            mMessageRepoImpl.subscribeToTopic(chatId)
+//        }
+//    }
+
+//    fun scheduleWork(context: Context, chatId: String) {
+//        val workRequest = OneTimeWorkRequestBuilder<CheckMessageWorker>()
+//            .setInputData(
+//                workDataOf("chatId" to chatId) // Pass the chatId to the worker
+//            )
+//            .build()
+//
+//        workManager.enqueue(workRequest) // Use the injected WorkManager instance
+//    }
 
 
     sealed interface GetMessageStates {
@@ -58,5 +86,4 @@ class ChatScreenVm @Inject constructor(
         data class Success(val data: List<MessageResponse>) : GetMessageStates
         data class Error(val error: String) : GetMessageStates
     }
-
 }

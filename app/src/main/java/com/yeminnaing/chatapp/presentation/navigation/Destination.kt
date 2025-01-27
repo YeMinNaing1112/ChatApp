@@ -17,4 +17,6 @@ sealed class Destination {
     data object HomeScreen:Destination()
     @Serializable
     data object SearchScreen:Destination()
+    @Serializable
+    data object SplashScreen:Destination()
 }

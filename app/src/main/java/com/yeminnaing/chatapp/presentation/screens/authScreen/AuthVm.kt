@@ -2,7 +2,7 @@ package com.yeminnaing.chatapp.presentation.screens.authScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yeminnaing.chatapp.data.repositories.AuthRepoImpl
+import com.yeminnaing.chatapp.domain.repositories.AuthRepo
 import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthVm @Inject constructor(
-    private val mAuthRepoImpl: AuthRepoImpl,
+    private val mAuthRepoImpl: AuthRepo,
     private val navigator: Navigator,
 ) : ViewModel() {
     private val _authState = MutableStateFlow<AuthStates>(AuthStates.Empty)
@@ -36,29 +36,29 @@ class AuthVm @Inject constructor(
         }
     }
 
-    fun navigateToSignInScreen(){
+    fun navigateToSignInScreen() {
         viewModelScope.launch {
             navigator.navigate(
                 destination = Destination.SignInScreen,
                 navOption = {
-                    popUpTo(Destination.RegisterScreen){
-                        inclusive=true
+                    popUpTo(Destination.RegisterScreen) {
+                        inclusive = true
                     }
-                    launchSingleTop=true
+                    launchSingleTop = true
                 }
             )
         }
     }
 
-    fun navigateToRegisterScreen(){
+    fun navigateToRegisterScreen() {
         viewModelScope.launch {
             navigator.navigate(
                 destination = Destination.RegisterScreen,
                 navOption = {
-                    popUpTo(Destination.SignInScreen){
-                        inclusive=true
+                    popUpTo(Destination.SignInScreen) {
+                        inclusive = true
                     }
-                    launchSingleTop=true
+                    launchSingleTop = true
                 }
             )
         }

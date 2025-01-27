@@ -18,5 +18,8 @@ interface ChatsRepo {
         onFailure: (String) -> Unit,
     )
 
+    suspend fun subscribeToTopic(topic:String)
+
+
 }
 

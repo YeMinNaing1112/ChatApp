@@ -1,6 +1,7 @@
 package com.yeminnaing.chatapp.presentation.screens.homeScreen
 
 import android.app.Activity
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,11 +23,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,11 +47,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.yeminnaing.chatapp.domain.responses.ChatResponse
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen() {
     val viewModel: HomeScreenVm = hiltViewModel()
@@ -58,6 +65,19 @@ fun HomeScreen() {
     BackHandler {
         (context as? Activity)?.finish()
     }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionState = rememberPermissionState(
+                permission = android.Manifest.permission.POST_NOTIFICATIONS
+            )
+            if (!permissionState.status.isGranted) {
+                OutlinedButton(onClick = { permissionState.launchPermissionRequest() }) {
+                    Text(text = "AllowNotification")
+                }
+            }
+        }
+
+
     HomeScreenDesign(chatsStates, getLastMessageStates, addChannel = {
 //        viewModel.addChannel(it)
     }, navigateToChatScreen =

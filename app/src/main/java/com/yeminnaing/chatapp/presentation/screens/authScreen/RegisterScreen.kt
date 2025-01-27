@@ -1,6 +1,8 @@
 package com.yeminnaing.chatapp.presentation.screens.authScreen
 
+import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,7 +43,9 @@ fun RegisterScreen() {
     val viewModel: AuthVm = hiltViewModel()
     val context = LocalContext.current
     val authState by viewModel.authStates.collectAsState()
-
+    BackHandler {
+        (context as? Activity)?.finish()
+    }
     LaunchedEffect(authState) {
         when (authState) {
             AuthVm.AuthStates.Authenticated -> {
@@ -69,7 +73,6 @@ fun RegisterScreen() {
     RegisterScreenDesign(register = { name, email, password ->
         viewModel.register(email = email, name = name, password = password)
     }, navigation = {
-
         viewModel.navigateToSignInScreen()
     })
 }
@@ -170,9 +173,10 @@ fun RegisterScreenDesign(
                     ), modifier = modifier.padding(top = 10.dp)
                 )
 
-                Button(onClick = {
-                    register(name, email, password)
-                }, modifier.padding(top = 16.dp)
+                Button(
+                    onClick = {
+                        register(name, email, password)
+                    }, modifier.padding(top = 16.dp)
                 ) {
                     Text(text = "Register")
                 }

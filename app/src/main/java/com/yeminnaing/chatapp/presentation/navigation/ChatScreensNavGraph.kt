@@ -11,6 +11,7 @@ import com.yeminnaing.chatapp.presentation.screens.authScreen.SignInScreen
 import com.yeminnaing.chatapp.presentation.screens.chatScreen.ChatScreen
 import com.yeminnaing.chatapp.presentation.screens.homeScreen.HomeScreen
 import com.yeminnaing.chatapp.presentation.screens.searchScreen.SearchScreen
+import com.yeminnaing.chatapp.presentation.screens.splashScreen.SplashScreen
 
 @Composable
 fun ChatScreensNavGraph(navigator: Navigator) {
@@ -33,8 +34,11 @@ fun ChatScreensNavGraph(navigator: Navigator) {
         startDestination = navigator.startDestination
     ) {
         navigation<Destination.AuthGraph>(
-            startDestination = Destination.SignInScreen
+            startDestination = Destination.SplashScreen
         ) {
+            composable<Destination.SplashScreen> {
+                SplashScreen()
+            }
             composable<Destination.SignInScreen> {
                 SignInScreen()
             }

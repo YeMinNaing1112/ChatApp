@@ -7,7 +7,7 @@ import com.yeminnaing.chatapp.domain.responses.UserResponse
 import javax.inject.Inject
 
 class ChatsRepoImpl @Inject constructor(
-private val dataBaseImpl: ChatsRealTimeDataBaseImpl
+private val dataBaseImpl: ChatsRealTimeDataBaseImpl,
 ):ChatsRepo {
     override fun getChats(
         onSuccess: (List<ChatResponse>) -> Unit,
@@ -27,6 +27,10 @@ private val dataBaseImpl: ChatsRealTimeDataBaseImpl
         onFailure: (String) -> Unit,
     ) {
         dataBaseImpl.findUserByEmail(email, onSuccess, onFailure)
+    }
+
+    override suspend fun subscribeToTopic(topic: String) {
+        TODO("Not yet implemented")
     }
 
 }

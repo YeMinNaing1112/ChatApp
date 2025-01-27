@@ -52,6 +52,8 @@ fun ChatScreen(chatId: String) {
         viewModel.navigateBackToHome()
     }
 
+//        viewModel.scheduleWork(context, id)
+
 
     Scaffold {
         Column(
@@ -63,6 +65,7 @@ fun ChatScreen(chatId: String) {
 
 
         ) {
+
             LaunchedEffect(viewModel) {
                 viewModel.listenForMessage(chatId = id)
             }
@@ -81,12 +84,19 @@ fun ChatScreen(chatId: String) {
                 }
 
                 is ChatScreenVm.GetMessageStates.Success -> {
+
+
                     ChatScreenDesign(
                         messages = (messageStates as ChatScreenVm.GetMessageStates.Success).data,
                         onSendMessage = { message ->
-                            viewModel.sendMessage(id, message)
+
+                            viewModel.sendMessage(id, message )
+
+                        }, notification = { name, message ->
+                            viewModel.getNotification(name, message)
                         })
                 }
+
             }
 
 
@@ -99,13 +109,18 @@ fun ChatScreenDesign(
     modifier: Modifier = Modifier,
     messages: List<MessageResponse>,
     onSendMessage: (String) -> Unit,
-
-    ) {
+    notification: (name: String, message: String) -> Unit,
+) {
     val hideKeyboardController = LocalSoftwareKeyboardController.current
 
     val msg = remember {
         mutableStateOf("")
     }
+    val lastMessage = messages.last()
+//    LaunchedEffect(lastMessage) {
+//        notification(lastMessage.senderName,lastMessage.text)
+//    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn {
             items(messages) { message ->
@@ -148,7 +163,7 @@ fun ChatList(modifier: Modifier = Modifier, message: MessageResponse) {
     val bubbleColor = if (isCurrentUser) {
         AppTheme.colorScheme.onPrimary
     } else {
-       AppTheme.colorScheme.background
+        AppTheme.colorScheme.background
     }
     Box(
         modifier = Modifier
@@ -195,6 +210,6 @@ private fun ChatScreenDesignPrev() {
                 text = "Hello"
             )
         ),
-        onSendMessage = {},
+        onSendMessage = {}, notification = { name, message -> }
     )
 }
