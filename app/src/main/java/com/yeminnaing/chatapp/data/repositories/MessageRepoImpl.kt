@@ -9,8 +9,8 @@ import javax.inject.Inject
 class MessageRepoImpl @Inject constructor(
     private val messageRealtimeDataBaseImpl: MessageRealtimeDataBaseImpl,
 ) : MessageRepo {
-    override fun sendMessage(chatId: String, message: String,context: Context) {
-        messageRealtimeDataBaseImpl.sendMessage(chatId, message,context)
+    override fun sendMessage(chatId: String, message: String) {
+        messageRealtimeDataBaseImpl.sendMessage(chatId, message)
     }
 
     override fun listenForMessage(

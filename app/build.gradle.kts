@@ -49,12 +49,6 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            excludes += "META-INF/DEPENDENCIES"
-            excludes +="META-INF/LICENSE"
-            excludes +="META-INF/LICENSE.txt"
-            excludes +="META-INF/NOTICE"
-            excludes +="META-INF/NOTICE.txt"
-            excludes +="mozilla/public-suffix-list.txt"
         }
     }
 }
@@ -79,8 +73,6 @@ dependencies {
     implementation("com.google.firebase:firebase-config:22.0.0")
     implementation("com.google.firebase:firebase-analytics:22.0.2")
     implementation("com.google.accompanist:accompanist-permissions:0.37.0")
-    implementation("com.google.firebase:firebase-messaging:24.1.0")
-    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
     implementation("androidx.hilt:hilt-work:1.2.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

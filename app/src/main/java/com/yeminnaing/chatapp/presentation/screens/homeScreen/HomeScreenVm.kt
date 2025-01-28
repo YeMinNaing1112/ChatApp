@@ -1,10 +1,7 @@
 package com.yeminnaing.chatapp.presentation.screens.homeScreen
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
-import com.yeminnaing.chatapp.data.repositories.MessageRepoImpl
 import com.yeminnaing.chatapp.domain.repositories.ChatsRepo
 import com.yeminnaing.chatapp.domain.repositories.MessageRepo
 import com.yeminnaing.chatapp.domain.responses.ChatResponse
@@ -19,8 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenVm @Inject constructor(
-    private val chatsRepoImpl: ChatsRepoImpl,
-    private val mMessageRepoImpl: MessageRepoImpl,
+    private val chatsRepoImpl: ChatsRepo,
+    private val mMessageRepoImpl: MessageRepo,
     private val navigator: Navigator,
 ) : ViewModel() {
     private val _getChatsStates = MutableStateFlow<GetChatsStates>(GetChatsStates.Empty)
@@ -32,7 +29,6 @@ class HomeScreenVm @Inject constructor(
     init {
         getChats()
     }
-
 
 
     fun navigateToChatScreen(id: String) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
+import com.yeminnaing.chatapp.domain.repositories.ChatsRepo
 import com.yeminnaing.chatapp.domain.responses.UserResponse
 import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchScreenVm @Inject constructor(
-    private val chatsRepoImpl: ChatsRepoImpl,
+    private val chatsRepoImpl: ChatsRepo,
     private val auth: FirebaseAuth,
     private val navigator: Navigator
 ) : ViewModel() {

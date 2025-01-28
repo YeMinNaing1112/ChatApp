@@ -92,8 +92,6 @@ fun ChatScreen(chatId: String) {
 
                             viewModel.sendMessage(id, message )
 
-                        }, notification = { name, message ->
-                            viewModel.getNotification(name, message)
                         })
                 }
 
@@ -109,17 +107,12 @@ fun ChatScreenDesign(
     modifier: Modifier = Modifier,
     messages: List<MessageResponse>,
     onSendMessage: (String) -> Unit,
-    notification: (name: String, message: String) -> Unit,
 ) {
     val hideKeyboardController = LocalSoftwareKeyboardController.current
 
     val msg = remember {
         mutableStateOf("")
     }
-    val lastMessage = messages.last()
-//    LaunchedEffect(lastMessage) {
-//        notification(lastMessage.senderName,lastMessage.text)
-//    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn {
@@ -210,6 +203,6 @@ private fun ChatScreenDesignPrev() {
                 text = "Hello"
             )
         ),
-        onSendMessage = {}, notification = { name, message -> }
+        onSendMessage = {}
     )
 }

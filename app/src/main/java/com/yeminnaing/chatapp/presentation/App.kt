@@ -3,18 +3,11 @@ package com.yeminnaing.chatapp.presentation
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
-import android.util.Log
-import androidx.work.Configuration
-import androidx.work.WorkManager
-import com.google.firebase.messaging.FirebaseMessaging
-import com.yeminnaing.chatapp.data.notificationManager.NOTIFICATION_CHANNEL_ID
-import com.yeminnaing.chatapp.data.notificationManager.NOTIFICATION_CHANNEL_NAME
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class App: Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()

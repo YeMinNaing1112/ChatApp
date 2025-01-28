@@ -4,7 +4,7 @@ import android.content.Context
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
 
 interface MessageRepo {
-    fun sendMessage(chatId: String, message: String,context: Context)
+    fun sendMessage(chatId: String, message: String)
 
     fun listenForMessage(
         onSuccess: (messages: List<MessageResponse>) -> Unit,
