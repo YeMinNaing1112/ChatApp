@@ -118,11 +118,16 @@ fun HomeScreenDesign(
 
                 is HomeScreenVm.GetChatsStates.Success -> {
                     LazyColumn {
-                        items(chatsStates.data) { chat ->
+                        val sortedChats = chatsStates.data.sortedByDescending { chat ->
+                            when (val lastMessageState = getLastMessageStates[chat.chatId]) {
+                                is HomeScreenVm.GetLastMessage.Success -> lastMessageState.message.timeStamp
+                                else -> Long.MIN_VALUE // Default to the earliest if no message is found
+                            }
+                        }
+
+                        items(sortedChats) { chat ->
                             getLastMessage(chat.chatId)
-
                             val lastMessageState = getLastMessageStates[chat.chatId]
-
                             Row(modifier = Modifier.clickable {
                                 navigateToChatScreen(chat.chatId)
                             }, verticalAlignment = Alignment.CenterVertically) {
@@ -208,7 +213,7 @@ fun AddChannelDialog(onAddChannel: (String) -> Unit) {
     }
     Column(
         modifier = Modifier.padding(16.dp),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Add Channel")

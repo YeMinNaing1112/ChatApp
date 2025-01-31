@@ -17,16 +17,4 @@ interface MessageFireBaseApi {
         onFailure: (String) -> Unit,
         chatId: String,
     )
-//    suspend fun subscribeToTopic(topic:String)
-
-
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    suspend fun getLastMessageSuspend(
-//        firebaseDatabase: DatabaseReference,
-//        chatId: String
-//    ): Result<MessageResponse>
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    suspend fun getLastMessageSuspend(chatId: String): Result<MessageResponse>
-
 }
