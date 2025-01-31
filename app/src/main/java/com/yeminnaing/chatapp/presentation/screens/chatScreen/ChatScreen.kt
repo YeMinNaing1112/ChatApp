@@ -90,7 +90,7 @@ fun ChatScreen(chatId: String) {
                         messages = (messageStates as ChatScreenVm.GetMessageStates.Success).data,
                         onSendMessage = { message ->
 
-                            viewModel.sendMessage(id, message )
+                            viewModel.sendMessage(id, message)
 
                         })
                 }

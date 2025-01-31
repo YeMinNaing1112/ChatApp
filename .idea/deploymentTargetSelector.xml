@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-01-24T04:55:01.960172300Z">
+        <DropdownSelection timestamp="2025-01-30T10:39:13.304006700Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\yemin\.android\avd\Pixel_8_API_34.avd" />
@@ -27,6 +27,9 @@
         </DialogSelection>
       </SelectionState>
       <SelectionState runConfigName="SearchScreenDesignPrev">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="HomeScreenDesignPrev">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

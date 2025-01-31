@@ -1,7 +1,6 @@
 package com.yeminnaing.chatapp.presentation.screens.homeScreen
 
 import android.app.Activity
-import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,13 +22,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,67 +42,49 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.yeminnaing.chatapp.domain.responses.ChatResponse
+import com.yeminnaing.chatapp.presentation.screens.chatScreen.ChatScreenVm
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen() {
     val viewModel: HomeScreenVm = hiltViewModel()
     val chatsStates by viewModel.getChatsStates.collectAsState()
     val getLastMessageStates by viewModel.getLastMessage.collectAsState()
-    val context= LocalContext.current
+    val getLastMessageStatesMap by viewModel.getLastMessageMap.collectAsState()
+    val context = LocalContext.current
+
     BackHandler {
         (context as? Activity)?.finish()
     }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permissionState = rememberPermissionState(
-                permission = android.Manifest.permission.POST_NOTIFICATIONS
-            )
-            if (!permissionState.status.isGranted) {
-                OutlinedButton(onClick = { permissionState.launchPermissionRequest() }) {
-                    Text(text = "AllowNotification")
-                }
-            }
-        }
-
-
-    HomeScreenDesign(chatsStates, getLastMessageStates, addChannel = {
+    HomeScreenDesign(chatsStates,
+        getLastMessageStatesMap,
+        addChannel = {
 //        viewModel.addChannel(it)
-    }, navigateToChatScreen =
-    viewModel::navigateToChatScreen,
-        navigateToSearchScreen =
-        viewModel::navigateToSearchScreen,
+        },
+        navigateToChatScreen = viewModel::navigateToChatScreen,
+        navigateToSearchScreen = viewModel::navigateToSearchScreen,
         getLastMessage = {
             viewModel.upDateChatWithLastMessage(it)
-        }
-
-
-    )
+        })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenDesign(
     chatsStates: HomeScreenVm.GetChatsStates,
-    getLastMessageStates: HomeScreenVm.GetLastMessage,
+    getLastMessageStates: Map<String, HomeScreenVm.GetLastMessage>,
     addChannel: (String) -> Unit,
     getLastMessage: (String) -> Unit,
     navigateToChatScreen: (String) -> Unit,
     navigateToSearchScreen: () -> Unit,
 ) {
-    val context = LocalContext.current
     val addChannelDialog = remember {
         mutableStateOf(false)
     }
-    val sheetState = rememberModalBottomSheetState()
     Scaffold(
         modifier = Modifier.background(AppTheme.colorScheme.primary),
         floatingActionButton = {
@@ -142,12 +120,16 @@ fun HomeScreenDesign(
                     LazyColumn {
                         items(chatsStates.data) { chat ->
                             getLastMessage(chat.chatId)
+
+                            val lastMessageState = getLastMessageStates[chat.chatId]
+
                             Row(modifier = Modifier.clickable {
                                 navigateToChatScreen(chat.chatId)
+                            }, verticalAlignment = Alignment.CenterVertically) {
 
-                            }) {
                                 findTargetUser(chat.participants)?.let { targetUser ->
-                                    Text(color = AppTheme.colorScheme.secondary,
+                                    Text(
+                                        color = AppTheme.colorScheme.secondary,
                                         text = targetUser.firstOrNull().toString(),
                                         modifier = Modifier
                                             .padding(16.dp)
@@ -164,15 +146,24 @@ fun HomeScreenDesign(
 
                                 Column(modifier = Modifier.weight(1f)) {
                                     findTargetUser(chat.participants)?.let { targetUser ->
-                                        Text(color = AppTheme.colorScheme.secondary,
+                                        Text(
+                                            color = AppTheme.colorScheme.secondary,
                                             text = targetUser,
                                         )
                                     }
-                                    when (getLastMessageStates) {
+                                    when (lastMessageState) {
                                         is HomeScreenVm.GetLastMessage.Success -> {
-                                            Text( color = AppTheme.colorScheme.secondary,
-                                                text = getLastMessageStates.message.text,
-                                            )
+                                            if (lastMessageState.message.senderId == Firebase.auth.currentUser?.uid) {
+                                                Text(
+                                                    color = AppTheme.colorScheme.secondary,
+                                                    text = "You: ${lastMessageState.message.text}"
+                                                )
+                                            } else {
+                                                Text(
+                                                    color = AppTheme.colorScheme.secondary,
+                                                    text = lastMessageState.message.text,
+                                                )
+                                            }
                                         }
 
                                         else -> {}
@@ -186,7 +177,6 @@ fun HomeScreenDesign(
                     }
                 }
 
-                else -> {}
             }
 
 
@@ -243,40 +233,44 @@ fun TopAppBar(modifier: Modifier = Modifier, navigateToSearchScreen: () -> Unit)
             contentDescription = "Menu",
             modifier = Modifier
                 .padding(start = 16.dp)
-                .size(45.dp)
-                , tint = AppTheme.colorScheme.secondary
+                .size(45.dp),
+            tint = AppTheme.colorScheme.secondary
         )
 
-        Icon(imageVector = Icons.Default.Search,
+        Icon(
+            imageVector = Icons.Default.Search,
             contentDescription = "Search",
             modifier = Modifier
                 .padding(end = 16.dp)
                 .size(45.dp)
                 .clickable {
                     navigateToSearchScreen()
-                } , tint = AppTheme.colorScheme.secondary)
+                },
+            tint = AppTheme.colorScheme.secondary
+        )
     }
 }
 
 
-@Preview
-@Composable
-private fun HomeScreenDesignPrev() {
-    HomeScreenDesign(chatsStates = HomeScreenVm.GetChatsStates.Success(
-        listOf(
-            ChatResponse(
-                chatId = "1", mapOf(
-                    "User1" to true, "User2" to true
-                )
-            )
-        )
-    ),
-        HomeScreenVm.GetLastMessage.Empty,
-        addChannel = {},
-        navigateToChatScreen = {},
-        getLastMessage = {},
-        navigateToSearchScreen = {})
-}
+//@Preview
+//@Composable
+//private fun HomeScreenDesignPrev() {
+//    HomeScreenDesign(
+//        chatsStates = HomeScreenVm.GetChatsStates.Success(
+//        listOf(
+//            ChatResponse(
+//                chatId = "1", mapOf(
+//                    "User1" to true, "User2" to true
+//                )
+//            )
+//        )
+//    ),
+//        getLastMessageStates =,
+//        addChannel = {},
+//        navigateToChatScreen = {},
+//        getLastMessage = {},
+//        navigateToSearchScreen = {})
+//}
 
 @Preview
 @Composable

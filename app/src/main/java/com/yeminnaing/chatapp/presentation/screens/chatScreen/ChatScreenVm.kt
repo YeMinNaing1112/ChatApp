@@ -51,21 +51,6 @@ class ChatScreenVm @Inject constructor(
     }
 
 
-//    fun subscribeToConversation(chatId: String){
-//        viewModelScope.launch {
-//            mMessageRepoImpl.subscribeToTopic(chatId)
-//        }
-//    }
-
-//    fun scheduleWork(context: Context, chatId: String) {
-//        val workRequest = OneTimeWorkRequestBuilder<CheckMessageWorker>()
-//            .setInputData(
-//                workDataOf("chatId" to chatId) // Pass the chatId to the worker
-//            )
-//            .build()
-//
-//        workManager.enqueue(workRequest) // Use the injected WorkManager instance
-//    }
 
 
     sealed interface GetMessageStates {
