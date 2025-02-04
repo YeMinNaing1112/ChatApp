@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.yeminnaing.chatapp.domain.responses.MessageResponse
+import com.yeminnaing.chatapp.domain.responses.Message
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
@@ -105,7 +105,7 @@ fun ChatScreen(chatId: String) {
 @Composable
 fun ChatScreenDesign(
     modifier: Modifier = Modifier,
-    messages: List<MessageResponse>,
+    messages: List<Message>,
     onSendMessage: (String) -> Unit,
 ) {
     val hideKeyboardController = LocalSoftwareKeyboardController.current
@@ -151,7 +151,7 @@ fun ChatScreenDesign(
 
 
 @Composable
-fun ChatList(modifier: Modifier = Modifier, message: MessageResponse) {
+fun ChatList(modifier: Modifier = Modifier, message: Message) {
     val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
     val bubbleColor = if (isCurrentUser) {
         AppTheme.colorScheme.onPrimary
@@ -184,10 +184,11 @@ fun ChatList(modifier: Modifier = Modifier, message: MessageResponse) {
 @Composable
 private fun ChatListPrev() {
     ChatList(
-        message = MessageResponse(
-            senderId = "1",
-            senderName = "ZanZan",
-            text = "Hello"
+        message = Message(
+            id = "",
+            senderId = "",
+            text = "",
+            senderName = "",
         )
     )
 }
@@ -196,12 +197,14 @@ private fun ChatListPrev() {
 @Composable
 private fun ChatScreenDesignPrev() {
     ChatScreenDesign(
-        messages = listOf<MessageResponse>(
-            MessageResponse(
-                senderId = "1",
-                senderName = "ZanZan",
-                text = "Hello"
+        messages = listOf<Message>(
+            Message(
+                id = "",
+                senderId = "",
+                text = "",
+                senderName = "",
             )
+
         ),
         onSendMessage = {}
     )

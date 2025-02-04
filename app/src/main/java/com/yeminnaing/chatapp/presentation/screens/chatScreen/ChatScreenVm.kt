@@ -3,6 +3,7 @@ package com.yeminnaing.chatapp.presentation.screens.chatScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yeminnaing.chatapp.domain.repositories.MessageRepo
+import com.yeminnaing.chatapp.domain.responses.Message
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
 import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
@@ -52,11 +53,10 @@ class ChatScreenVm @Inject constructor(
 
 
 
-
     sealed interface GetMessageStates {
         data object Empty : GetMessageStates
         data object Loading : GetMessageStates
-        data class Success(val data: List<MessageResponse>) : GetMessageStates
+        data class Success(val data: List<Message>) : GetMessageStates
         data class Error(val error: String) : GetMessageStates
     }
 }

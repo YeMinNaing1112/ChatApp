@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,15 +45,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.yeminnaing.chatapp.domain.responses.ChatResponse
-import com.yeminnaing.chatapp.presentation.screens.chatScreen.ChatScreenVm
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
 fun HomeScreen() {
     val viewModel: HomeScreenVm = hiltViewModel()
     val chatsStates by viewModel.getChatsStates.collectAsState()
-    val getLastMessageStates by viewModel.getLastMessage.collectAsState()
     val getLastMessageStatesMap by viewModel.getLastMessageMap.collectAsState()
     val context = LocalContext.current
 
@@ -70,6 +68,7 @@ fun HomeScreen() {
         getLastMessage = {
             viewModel.upDateChatWithLastMessage(it)
         })
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,16 +116,20 @@ fun HomeScreenDesign(
                 }
 
                 is HomeScreenVm.GetChatsStates.Success -> {
+                    LaunchedEffect(Unit) {
+                        chatsStates.data.forEach { chat ->
+                            getLastMessage(chat.chatId)
+                        }
+                    }
                     LazyColumn {
                         val sortedChats = chatsStates.data.sortedByDescending { chat ->
                             when (val lastMessageState = getLastMessageStates[chat.chatId]) {
-                                is HomeScreenVm.GetLastMessage.Success -> lastMessageState.message.timeStamp
-                                else -> Long.MIN_VALUE // Default to the earliest if no message is found
+                                is HomeScreenVm.GetLastMessage.Success -> lastMessageState.message.metaData.timeStamp
+                                else -> Long.MIN_VALUE
                             }
                         }
 
                         items(sortedChats) { chat ->
-                            getLastMessage(chat.chatId)
                             val lastMessageState = getLastMessageStates[chat.chatId]
                             Row(modifier = Modifier.clickable {
                                 navigateToChatScreen(chat.chatId)
@@ -156,17 +159,21 @@ fun HomeScreenDesign(
                                             text = targetUser,
                                         )
                                     }
+
+
+
                                     when (lastMessageState) {
                                         is HomeScreenVm.GetLastMessage.Success -> {
-                                            if (lastMessageState.message.senderId == Firebase.auth.currentUser?.uid) {
+                                            val lastMessage = lastMessageState.message.metaData.lastMessage
+                                            if (lastMessageState.message.messageList.last().senderId == Firebase.auth.currentUser?.uid) {
                                                 Text(
                                                     color = AppTheme.colorScheme.secondary,
-                                                    text = "You: ${lastMessageState.message.text}"
+                                                    text = "You: $lastMessage"
                                                 )
                                             } else {
                                                 Text(
                                                     color = AppTheme.colorScheme.secondary,
-                                                    text = lastMessageState.message.text,
+                                                    text = lastMessage,
                                                 )
                                             }
                                         }

@@ -3,6 +3,7 @@ package com.yeminnaing.chatapp.data.repositories
 import android.content.Context
 import com.yeminnaing.chatapp.data.network.realTimeDataBase.MessageRealtimeDataBaseImpl
 import com.yeminnaing.chatapp.domain.repositories.MessageRepo
+import com.yeminnaing.chatapp.domain.responses.Message
 import com.yeminnaing.chatapp.domain.responses.MessageResponse
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class MessageRepoImpl @Inject constructor(
     }
 
     override fun listenForMessage(
-        onSuccess: (messages: List<MessageResponse>) -> Unit,
+        onSuccess: (messages: List<Message>) -> Unit,
         onFailure: (String) -> Unit,
         chatId: String,
     ) {
@@ -27,6 +28,10 @@ class MessageRepoImpl @Inject constructor(
         chatId: String,
     ) {
         messageRealtimeDataBaseImpl.getLastMessage(onSuccess, onFailure, chatId)
+    }
+
+    override fun createMessage(chatId: String) {
+        messageRealtimeDataBaseImpl.createMessage(chatId)
     }
 
     //    override suspend fun subscribeToTopic(topic: String) {

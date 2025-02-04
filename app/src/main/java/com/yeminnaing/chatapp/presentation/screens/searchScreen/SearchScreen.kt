@@ -48,8 +48,9 @@ fun SearchScreen() {
 
     SearchScreenDesign(searchStates = searchState, findByEmail = {
         viewmodel.findByEmail(it)
-    }, createChatId = {
+    }, createChatIdandMessage = {
         viewmodel.createChatId(it)
+        viewmodel.createMessage()
     }, navigateChatScreen = {
         viewmodel.navigateToChatScreen()
     })
@@ -62,7 +63,7 @@ fun SearchScreenDesign(
     modifier: Modifier = Modifier,
     searchStates: SearchScreenVm.SearchStates,
     findByEmail: (String) -> Unit,
-    createChatId: (String) -> Unit,
+    createChatIdandMessage: (String) -> Unit,
     navigateChatScreen: () -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -157,7 +158,7 @@ fun SearchScreenDesign(
                         style = AppTheme.typography.body, color = AppTheme.colorScheme.secondary, modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                createChatId(searchStates.users.username)
+                                createChatIdandMessage(searchStates.users.username)
                                 navigateChatScreen()
                             })
                 }
@@ -179,6 +180,6 @@ private fun SearchScreenDesignPrev() {
     SearchScreenDesign(
         searchStates = SearchScreenVm.SearchStates.Empty,
         findByEmail = {},
-        createChatId = {},
+        createChatIdandMessage = {},
         navigateChatScreen = {})
 }

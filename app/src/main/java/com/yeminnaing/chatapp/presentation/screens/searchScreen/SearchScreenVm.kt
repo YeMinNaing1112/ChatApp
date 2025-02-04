@@ -3,8 +3,8 @@ package com.yeminnaing.chatapp.presentation.screens.searchScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.yeminnaing.chatapp.data.repositories.ChatsRepoImpl
 import com.yeminnaing.chatapp.domain.repositories.ChatsRepo
+import com.yeminnaing.chatapp.domain.repositories.MessageRepo
 import com.yeminnaing.chatapp.domain.responses.UserResponse
 import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
@@ -19,22 +19,23 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchScreenVm @Inject constructor(
     private val chatsRepoImpl: ChatsRepo,
+    private val messageRepoImpl: MessageRepo,
     private val auth: FirebaseAuth,
-    private val navigator: Navigator
+    private val navigator: Navigator,
 ) : ViewModel() {
     private val _searchState = MutableStateFlow<SearchStates>(SearchStates.Empty)
     val searchState = _searchState.asStateFlow()
 
     lateinit var chatId: String
 
-    fun navigateToChatScreen(){
+    fun navigateToChatScreen() {
         viewModelScope.launch {
-            navigator.navigate(destination= Destination.ChatScreen(id=chatId),
+            navigator.navigate(destination = Destination.ChatScreen(id = chatId),
                 navOption = {
-                    popUpTo(Destination.SearchScreen){
-                        inclusive=true
+                    popUpTo(Destination.SearchScreen) {
+                        inclusive = true
                     }
-                    launchSingleTop=true
+                    launchSingleTop = true
                 }
             )
         }
@@ -43,8 +44,12 @@ class SearchScreenVm @Inject constructor(
 
     fun createChatId(targetUser: String) {
         val currentUserId = auth.currentUser?.displayName ?: ""
-        chatId = generateChatId(currentUserId,targetUser)
+        chatId = generateChatId(currentUserId, targetUser)
         chatsRepoImpl.createChat(chatId, targetUser)
+    }
+
+    fun createMessage() {
+          messageRepoImpl.createMessage(chatId)
     }
 
 
@@ -63,7 +68,7 @@ class SearchScreenVm @Inject constructor(
     }
 
 
-   private fun generateChatId(currentUserId: String, targetUserId: String): String {
+    private fun generateChatId(currentUserId: String, targetUserId: String): String {
         val sortedIds = listOf(currentUserId, targetUserId).sorted()
         return sortedIds.joinToString("_")
     }

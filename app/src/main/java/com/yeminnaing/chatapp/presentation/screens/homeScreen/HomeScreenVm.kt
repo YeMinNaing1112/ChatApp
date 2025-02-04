@@ -22,13 +22,11 @@ class HomeScreenVm @Inject constructor(
 ) : ViewModel() {
     private val _getChatsStates = MutableStateFlow<GetChatsStates>(GetChatsStates.Empty)
     val getChatsStates = _getChatsStates.asStateFlow()
-
-    private val _getLastMessage = MutableStateFlow<GetLastMessage>(GetLastMessage.Empty)
-    val getLastMessage = _getLastMessage.asStateFlow()
-
     private val _getLastMessageMap =
         MutableStateFlow<Map<String, GetLastMessage>>(emptyMap())
     val getLastMessageMap = _getLastMessageMap.asStateFlow()
+
+
 
     init {
         getChats()
@@ -75,34 +73,27 @@ class HomeScreenVm @Inject constructor(
         )
     }
 
+
     fun upDateChatWithLastMessage(chatId: String) {
-//        mMessageRepoImpl.getLastMessage(
-//            onSuccess = {
-//                _getLastMessage.value = GetLastMessage.Success(it)
-//            },
-//            onFailure = {
-//                _getLastMessage.value = GetLastMessage.Error(it)
-//            },
-//            chatId = chatId
-//        )
-        _getLastMessageMap.value = _getLastMessageMap.value.toMutableMap().apply {
-            put(chatId, GetLastMessage.Loading)
+        viewModelScope.launch {
+            _getLastMessageMap.value = _getLastMessageMap.value.toMutableMap().apply {
+                this[chatId] = GetLastMessage.Loading
+            }
+
+            mMessageRepoImpl.getLastMessage(
+                onSuccess = { messageResponse ->
+                    _getLastMessageMap.value = _getLastMessageMap.value.toMutableMap().apply {
+                        this[chatId] = GetLastMessage.Success(messageResponse)
+                    }
+                },
+                onFailure = { error ->
+                    _getLastMessageMap.value = _getLastMessageMap.value.toMutableMap().apply {
+                        this[chatId] = GetLastMessage.Error(error)
+                    }
+                },
+                chatId = chatId
+            )
         }
-        mMessageRepoImpl.getLastMessage(
-            onSuccess = { message ->
-                _getLastMessageMap.value = _getLastMessageMap.value.toMutableMap().apply {
-                    put(chatId, GetLastMessage.Success(message = message))
-                }
-            },
-            onFailure = { error ->
-                _getLastMessageMap.value = _getLastMessageMap.value.toMutableMap().apply {
-                    put(chatId, GetLastMessage.Error(error))
-                }
-            },
-            chatId = chatId
-
-        )
-
     }
 
     sealed interface GetChatsStates {
