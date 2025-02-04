@@ -12,7 +12,7 @@ data class Message(
 )
 
 data class MessageResponse(
-    val metaData: MetaData = MetaData(),
+    val metaData: MetaData? = MetaData(),
     val messageList: List<Message> = emptyList(),
 )
 

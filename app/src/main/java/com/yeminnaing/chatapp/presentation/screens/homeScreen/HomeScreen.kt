@@ -124,7 +124,7 @@ fun HomeScreenDesign(
                     LazyColumn {
                         val sortedChats = chatsStates.data.sortedByDescending { chat ->
                             when (val lastMessageState = getLastMessageStates[chat.chatId]) {
-                                is HomeScreenVm.GetLastMessage.Success -> lastMessageState.message.metaData.timeStamp
+                                is HomeScreenVm.GetLastMessage.Success -> lastMessageState.message.metaData?.timeStamp
                                 else -> Long.MIN_VALUE
                             }
                         }
@@ -164,7 +164,7 @@ fun HomeScreenDesign(
 
                                     when (lastMessageState) {
                                         is HomeScreenVm.GetLastMessage.Success -> {
-                                            val lastMessage = lastMessageState.message.metaData.lastMessage
+                                            val lastMessage = lastMessageState.message.metaData?.lastMessage
                                             if (lastMessageState.message.messageList.last().senderId == Firebase.auth.currentUser?.uid) {
                                                 Text(
                                                     color = AppTheme.colorScheme.secondary,
@@ -173,7 +173,7 @@ fun HomeScreenDesign(
                                             } else {
                                                 Text(
                                                     color = AppTheme.colorScheme.secondary,
-                                                    text = lastMessage,
+                                                    text = lastMessage?: "",
                                                 )
                                             }
                                         }

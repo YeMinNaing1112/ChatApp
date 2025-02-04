@@ -113,18 +113,8 @@ class MessageRealtimeDataBaseImpl @Inject constructor(
     }
 
     override fun createMessage(chatId: String) {
-        val metaData = MetaData(
-            chatId = chatId,
-            lastMessage = "",
-        )
-        val messageList : List<Message> = listOf(
-            Message(
-                id = "",
-                senderId = "",
-                senderName = "",
-                text = ""
-            )
-        )
+        val metaData = null
+        val messageList : List<Message> = listOf()
 
         val messageResponse = MessageResponse(
             metaData= metaData,

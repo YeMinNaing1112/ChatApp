@@ -27,8 +27,13 @@ class ChatScreenVm @Inject constructor(
             onSuccess = {
                 _getMessageState.value = GetMessageStates.Success(it)
             },
-            onFailure = {
-                _getMessageState.value = GetMessageStates.Error(it)
+            onFailure = { error->
+                if (error == "No messages found"){
+                   _getMessageState.value =GetMessageStates.Success(data = listOf<Message>())
+                }else{
+                    _getMessageState.value = GetMessageStates.Error(error)
+                }
+
             },
             chatId = chatId
         )
