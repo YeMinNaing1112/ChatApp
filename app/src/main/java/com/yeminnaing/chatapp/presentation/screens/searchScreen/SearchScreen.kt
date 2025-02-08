@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -75,6 +75,9 @@ fun SearchScreenDesign(
         mutableStateOf(TextFieldValue(""))
     }
 
+
+
+
     Scaffold {
         Column(modifier = modifier
             .background(AppTheme.colorScheme.primary)
@@ -103,11 +106,10 @@ fun SearchScreenDesign(
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email, imeAction = ImeAction.Search
                     ),
-                    textStyle = TextStyle(fontSize = 24.sp, color = AppTheme.colorScheme.secondary),
+                    textStyle = TextStyle(fontSize = 16.sp, color = AppTheme.colorScheme.secondary),
                     cursorBrush = SolidColor(AppTheme.colorScheme.secondary), // Change cursor color
                     decorationBox = { innerText ->
                         Box(
-                            modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.CenterStart // Center the text and cursor
                         ) {
                             if (search.text.isEmpty()) {
@@ -134,6 +136,12 @@ fun SearchScreenDesign(
                         .focusRequester(searchRequestFocus)
                         .align(Alignment.CenterVertically)
 
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
+                    contentDescription = "Back",
+                    tint = AppTheme.colorScheme.secondary,
+                    modifier = modifier.padding(start = 16.dp, top = 10.dp)
                 )
             }
             //endregion

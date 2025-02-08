@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -37,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.yeminnaing.chatapp.domain.responses.ChatResponse
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
@@ -164,7 +168,8 @@ fun HomeScreenDesign(
 
                                     when (lastMessageState) {
                                         is HomeScreenVm.GetLastMessage.Success -> {
-                                            val lastMessage = lastMessageState.message.metaData?.lastMessage
+                                            val lastMessage =
+                                                lastMessageState.message.metaData?.lastMessage
                                             if (lastMessageState.message.messageList.last().senderId == Firebase.auth.currentUser?.uid) {
                                                 Text(
                                                     color = AppTheme.colorScheme.secondary,
@@ -173,7 +178,7 @@ fun HomeScreenDesign(
                                             } else {
                                                 Text(
                                                     color = AppTheme.colorScheme.secondary,
-                                                    text = lastMessage?: "",
+                                                    text = lastMessage ?: "",
                                                 )
                                             }
                                         }
@@ -237,55 +242,102 @@ fun AddChannelDialog(onAddChannel: (String) -> Unit) {
 
 @Composable
 fun TopAppBar(modifier: Modifier = Modifier, navigateToSearchScreen: () -> Unit) {
-    Row(
-        modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Icon(
-            imageVector = Icons.Default.List,
-            contentDescription = "Menu",
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .size(45.dp),
-            tint = AppTheme.colorScheme.secondary
-        )
+    Column {
+        Row(
+            modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                imageVector = Icons.Default.List,
+                contentDescription = "Menu",
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .size(32.dp),
+                tint = AppTheme.colorScheme.secondary
+            )
 
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "Search",
-            modifier = Modifier
-                .padding(end = 16.dp)
-                .size(45.dp)
+            Text(
+                text = "Chat Room",
+                color = AppTheme.colorScheme.secondary,
+                modifier = Modifier.padding(top = 16.dp)
+                , fontSize = 16.sp
+                    , fontWeight = FontWeight.Bold
+            )
+
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "Account",
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(32.dp),
+                tint = AppTheme.colorScheme.secondary
+            )
+        }
+
+        Row (
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .clip(RoundedCornerShape(32.dp))
+                .background(Color.LightGray)
                 .clickable {
                     navigateToSearchScreen()
-                },
-            tint = AppTheme.colorScheme.secondary
-        )
+                }
+
+        ){
+            Text(
+                text = "Search",
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+
+            )
+
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(32.dp)
+            )
+        }
+
+
     }
+
 }
 
 
-//@Preview
-//@Composable
-//private fun HomeScreenDesignPrev() {
-//    HomeScreenDesign(
-//        chatsStates = HomeScreenVm.GetChatsStates.Success(
-//        listOf(
-//            ChatResponse(
-//                chatId = "1", mapOf(
-//                    "User1" to true, "User2" to true
-//                )
-//            )
-//        )
-//    ),
-//        getLastMessageStates =,
-//        addChannel = {},
-//        navigateToChatScreen = {},
-//        getLastMessage = {},
-//        navigateToSearchScreen = {})
-//}
+@Preview
+@Composable
+private fun HomeScreenDesignPrev() {
+    HomeScreenDesign(
+        chatsStates = HomeScreenVm.GetChatsStates.Success(
+            listOf(
+                ChatResponse(
+                    chatId = "1", mapOf(
+                        "User1" to true, "User2" to true
+                    )
+                )
+            )
+        ),
+        getLastMessageStates = mapOf(),
+        addChannel = {},
+        navigateToChatScreen = {},
+        getLastMessage = {},
+        navigateToSearchScreen = {})
+}
 
 @Preview
 @Composable
 private fun AddChannelDialogPrev() {
     AddChannelDialog(onAddChannel = {})
+}
+
+@Preview
+@Composable
+private fun TopAppBarPrev() {
+    TopAppBar {
+
+    }
 }
