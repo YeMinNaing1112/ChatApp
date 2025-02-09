@@ -1,20 +1,16 @@
 package com.yeminnaing.chatapp.presentation.screens.searchScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,22 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.yeminnaing.chatapp.R
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
 @Composable
@@ -46,11 +29,15 @@ fun SearchScreen() {
     val viewmodel: SearchScreenVm = hiltViewModel()
     val searchState by viewmodel.searchState.collectAsState()
 
-    SearchScreenDesign(searchStates = searchState, findByEmail = {
-        viewmodel.findByEmail(it)
+    SearchScreenDesign(searchStates = searchState, findUser = {user->
+        if (user.endsWith("@gmail.com")){
+            viewmodel.findByEmail(user)
+        }else{
+            viewmodel.findByName(user)
+        }
     }, createChatIdandMessage = {
         viewmodel.createChatId(it)
-        viewmodel.createMessage()
+//        viewmodel.createMessage()
     }, navigateChatScreen = {
         viewmodel.navigateToChatScreen()
     })
@@ -58,127 +45,94 @@ fun SearchScreen() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreenDesign(
     modifier: Modifier = Modifier,
     searchStates: SearchScreenVm.SearchStates,
-    findByEmail: (String) -> Unit,
+    findUser: (String) -> Unit,
     createChatIdandMessage: (String) -> Unit,
     navigateChatScreen: () -> Unit,
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val searchRequestFocus = remember {
-        FocusRequester()
+    var text by remember {
+        mutableStateOf("")
+    }
+    var active by remember {
+        mutableStateOf(false)
     }
 
-    var search by remember {
-        mutableStateOf(TextFieldValue(""))
-    }
+   Column {
+       SearchBar(
+           modifier = modifier.fillMaxWidth(),
+           query = text,
+           onQueryChange = {
+               text = it
+           },
+           onSearch = {
+               val name = text.replace(" ", "")
+               findUser(name)
+               active = false
+
+           },
+           active = active,
+           onActiveChange = {
+               active = it
+           }, placeholder = {
+               Text(text = "Search")
+           },
+           leadingIcon = {
+               Icon(
+                   imageVector = Icons.Default.Search,
+                   contentDescription = "Search"
+               )
+           },
+           trailingIcon = {
+               if (active) {
+                   Icon(imageVector = Icons.Default.Close,
+                       contentDescription = "Close", modifier = modifier.clickable {
+                           text=""
+                           active=false
+                       }
+                   )
+               }
+           }
+
+       ) {
 
 
-
-
-    Scaffold {
-        Column(modifier = modifier
-            .background(AppTheme.colorScheme.primary)
-            .fillMaxSize()) {
-
-            //region SearchBar
-
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(it)
-                    .height(56.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-                    contentDescription = "Back",
-                    tint = AppTheme.colorScheme.secondary,
-                    modifier = modifier.padding(start = 16.dp, top = 10.dp)
-                )
-
-                BasicTextField(
-                    value = search,
-                    onValueChange = {
-                        search = it
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Email, imeAction = ImeAction.Search
-                    ),
-                    textStyle = TextStyle(fontSize = 16.sp, color = AppTheme.colorScheme.secondary),
-                    cursorBrush = SolidColor(AppTheme.colorScheme.secondary), // Change cursor color
-                    decorationBox = { innerText ->
-                        Box(
-                            contentAlignment = Alignment.CenterStart // Center the text and cursor
-                        ) {
-                            if (search.text.isEmpty()) {
-                                Text(
-                                    text = "Search",
-                                    color = AppTheme.colorScheme.secondary,
-                                    style = TextStyle(fontSize = 24.sp),
-
-                                    )
-
-                            }
-                        }
-
-                        innerText()
-                    },
-
-                    keyboardActions = KeyboardActions(onSearch = {
-                        keyboardController?.hide()
-                        val email = search.text.replace(" ", "")
-                        findByEmail(email)
-                    }),
-                    modifier = modifier
-                        .height(40.dp)
-                        .focusRequester(searchRequestFocus)
-                        .align(Alignment.CenterVertically)
-
-                )
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
-                    contentDescription = "Back",
-                    tint = AppTheme.colorScheme.secondary,
-                    modifier = modifier.padding(start = 16.dp, top = 10.dp)
-                )
-            }
-            //endregion
-
-            //region SearchList
-
-            when (searchStates) {
-                is SearchScreenVm.SearchStates.Empty -> {
+       }
+       when (searchStates) {
+           is SearchScreenVm.SearchStates.Empty -> {
 //                    Text(text = "It Empty")
-                }
+           }
 
-                is SearchScreenVm.SearchStates.Error -> {
+           is SearchScreenVm.SearchStates.Error -> {
 //                    Text(text = "Error")
-                }
+           }
 
-                is SearchScreenVm.SearchStates.Loading -> {
-                    CircularProgressIndicator()
-                }
+           is SearchScreenVm.SearchStates.Loading -> {
+               CircularProgressIndicator()
+           }
 
-                is SearchScreenVm.SearchStates.Success -> {
-                    Text(text = searchStates.users.username,
-                        style = AppTheme.typography.body, color = AppTheme.colorScheme.secondary, modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                createChatIdandMessage(searchStates.users.username)
-                                navigateChatScreen()
-                            })
-                }
-
-                else -> {}
-            }
-            //endregion
-        }
-
-    }
+           is SearchScreenVm.SearchStates.Success -> {
+               LazyColumn {
+                   items(searchStates.users) { user->
+                       Text(text = user.username ,
+                           style = AppTheme.typography.body, color = AppTheme.colorScheme.secondary, modifier = Modifier
+                               .fillMaxWidth()
+                               .clickable {
+                                   createChatIdandMessage(user.username)
+                                   navigateChatScreen()
+                               })
+                   }
+               }
 
 
+           }
+
+           else -> {}
+       }
+   }
 }
 
 
@@ -187,7 +141,7 @@ fun SearchScreenDesign(
 private fun SearchScreenDesignPrev() {
     SearchScreenDesign(
         searchStates = SearchScreenVm.SearchStates.Empty,
-        findByEmail = {},
+        findUser = {},
         createChatIdandMessage = {},
         navigateChatScreen = {})
 }

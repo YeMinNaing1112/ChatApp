@@ -48,9 +48,7 @@ class SearchScreenVm @Inject constructor(
         chatsRepoImpl.createChat(chatId, targetUser)
     }
 
-    fun createMessage() {
-          messageRepoImpl.createMessage(chatId)
-    }
+
 
 
     fun findByEmail(email: String) {
@@ -58,13 +56,26 @@ class SearchScreenVm @Inject constructor(
         chatsRepoImpl.findUserByEmail(
             email = email,
             onSuccess = {
-                _searchState.value = SearchStates.Success(it)
+                val userList= listOf(it)
+                _searchState.value = SearchStates.Success(userList)
             },
             onFailure = {
                 _searchState.value = SearchStates.Error(it)
             }
         )
 
+    }
+
+    fun findByName(name:String){
+        _searchState.value= SearchStates.Loading
+        chatsRepoImpl.findUserByName(
+            name=name,
+            onSuccess = {
+                  _searchState.value=SearchStates.Success(it)
+            }, onFailure = {
+                _searchState.value=SearchStates.Error(it)
+            }
+        )
     }
 
 
@@ -76,7 +87,7 @@ class SearchScreenVm @Inject constructor(
     sealed interface SearchStates {
         data object Empty : SearchStates
         data object Loading : SearchStates
-        data class Success(val users: UserResponse) : SearchStates
+        data class Success(val users: List<UserResponse> ) : SearchStates
         data class Error(val error: String) : SearchStates
     }
 }

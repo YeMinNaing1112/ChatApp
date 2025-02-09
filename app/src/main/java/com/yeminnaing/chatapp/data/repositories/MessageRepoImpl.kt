@@ -30,9 +30,9 @@ class MessageRepoImpl @Inject constructor(
         messageRealtimeDataBaseImpl.getLastMessage(onSuccess, onFailure, chatId)
     }
 
-    override fun createMessage(chatId: String) {
-        messageRealtimeDataBaseImpl.createMessage(chatId)
-    }
+//    override fun createMessage(chatId: String) {
+//        messageRealtimeDataBaseImpl.createMessage(chatId)
+//    }
 
     //    override suspend fun subscribeToTopic(topic: String) {
 //       messageRealtimeDataBaseImpl.subscribeToTopic(topic)

@@ -33,7 +33,6 @@ class ChatScreenVm @Inject constructor(
                 }else{
                     _getMessageState.value = GetMessageStates.Error(error)
                 }
-
             },
             chatId = chatId
         )

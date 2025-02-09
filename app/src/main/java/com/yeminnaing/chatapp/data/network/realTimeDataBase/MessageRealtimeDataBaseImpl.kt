@@ -112,16 +112,16 @@ class MessageRealtimeDataBaseImpl @Inject constructor(
             })
     }
 
-    override fun createMessage(chatId: String) {
-        val metaData = null
-        val messageList : List<Message> = listOf()
-
-        val messageResponse = MessageResponse(
-            metaData= metaData,
-            messageList=messageList
-        )
-        firebaseDatabase.child("messages").child(chatId).setValue(messageResponse)
-    }
+//    override fun createMessage(chatId: String) {
+//        val metaData = null
+//        val messageList : List<Message> = listOf()
+//
+//        val messageResponse = MessageResponse(
+//            metaData= metaData,
+//            messageList=messageList
+//        )
+//        firebaseDatabase.child("messages").child(chatId).setValue(messageResponse)
+//    }
 
 
 }

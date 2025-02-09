@@ -29,8 +29,13 @@ private val dataBaseImpl: ChatsRealTimeDataBaseImpl,
         dataBaseImpl.findUserByEmail(email, onSuccess, onFailure)
     }
 
-    override suspend fun subscribeToTopic(topic: String) {
-        TODO("Not yet implemented")
+    override fun findUserByName(
+        name: String,
+        onSuccess: (List<UserResponse>) -> Unit,
+        onFailure: (String) -> Unit,
+    ) {
+       dataBaseImpl.findUserByName(name, onSuccess, onFailure)
     }
+
 
 }

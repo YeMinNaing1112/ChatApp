@@ -20,5 +20,5 @@ interface MessageRepo {
 
 //    suspend fun subscribeToTopic(topic:String)
 
-    fun createMessage(chatId: String)
+//    fun createMessage(chatId: String)
 }

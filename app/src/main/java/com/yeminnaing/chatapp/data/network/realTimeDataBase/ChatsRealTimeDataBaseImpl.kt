@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.auth.User
 import com.yeminnaing.chatapp.domain.responses.ChatResponse
 import com.yeminnaing.chatapp.domain.responses.UserResponse
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class ChatsRealTimeDataBaseImpl @Inject constructor(
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
+                  onFailure(error.toString())
                 }
 
             })
@@ -84,6 +85,31 @@ class ChatsRealTimeDataBaseImpl @Inject constructor(
                 }
 
             })
+    }
+
+    override fun findUserByName(
+        name: String,
+        onSuccess: (List<UserResponse>) -> Unit,
+        onFailure: (String) -> Unit,
+    ) {
+        firebaseDatabase.child("users").orderByChild("username").equalTo(name)
+            .addValueEventListener(
+            object:ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val userList= mutableListOf<UserResponse>()
+                    snapshot.children.forEach{data->
+                        val user = data.getValue(UserResponse::class.java)
+                        user?.let { userList.add(it) }
+                    }
+                    onSuccess(userList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                 onFailure(error.message)
+                }
+
+            }
+        )
     }
 
 

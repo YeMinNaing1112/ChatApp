@@ -18,7 +18,12 @@ interface ChatsRepo {
         onFailure: (String) -> Unit,
     )
 
-    suspend fun subscribeToTopic(topic:String)
+    fun findUserByName(
+        name:String,
+        onSuccess: (List<UserResponse>) -> Unit,
+        onFailure: (String) -> Unit
+    )
+
 
 
 }

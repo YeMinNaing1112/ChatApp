@@ -19,7 +19,7 @@ interface MessageFireBaseApi {
         chatId: String,
     )
 
-    fun createMessage(
-        chatId: String
-    )
+//    fun createMessage(
+//        chatId: String
+//    )
 }
