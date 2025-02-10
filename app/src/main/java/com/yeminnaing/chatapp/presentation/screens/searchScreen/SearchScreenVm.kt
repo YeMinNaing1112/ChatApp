@@ -45,7 +45,8 @@ class SearchScreenVm @Inject constructor(
     fun createChatId(targetUser: String,id:String) {
         val currentUserId = auth.currentUser?.displayName ?: ""
         chatId = generateChatId(currentUserId, targetUser,id)
-        chatsRepoImpl.createChat(chatId, targetUser)
+        val uniqueTargetUser= "${targetUser}_$id"
+        chatsRepoImpl.createChat(chatId, uniqueTargetUser)
     }
 
 

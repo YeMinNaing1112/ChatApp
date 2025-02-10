@@ -215,7 +215,9 @@ fun findTargetUser(participants: Map<String, Boolean>): String? {
     val currentUserName = Firebase.auth.currentUser?.displayName
     val participant1 = participants.keys.elementAtOrNull(0)
     val participant2 = participants.keys.elementAtOrNull(1)
-    return if (participant1 != currentUserName) participant1 else participant2
+    val participants1Name= participant1?.substringBefore("_")
+    val participants2Name= participant2?.substringBefore("_")
+    return if (participants1Name != currentUserName) participants1Name else participants2Name
 }
 
 @Composable

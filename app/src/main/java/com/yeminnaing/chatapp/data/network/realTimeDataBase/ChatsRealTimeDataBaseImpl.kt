@@ -19,7 +19,9 @@ class ChatsRealTimeDataBaseImpl @Inject constructor(
         onSuccess: (List<ChatResponse>) -> Unit,
         onFailure: (String) -> Unit,
     ) {
-        val userId = firebaseAuth.currentUser?.displayName ?: ""
+        val userName = firebaseAuth.currentUser?.displayName ?: ""
+        val id= firebaseAuth.currentUser?.uid ?: ""
+        val userId="${userName}_$id"
         firebaseDatabase.child("chats").orderByChild("participants/$userId").equalTo(true)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -46,7 +48,9 @@ class ChatsRealTimeDataBaseImpl @Inject constructor(
        firebaseDatabase.child("chats").child(chatId).addValueEventListener(object : ValueEventListener{
            override fun onDataChange(snapshot: DataSnapshot) {
                if (!snapshot.exists()) {
-                   val currentUserId = firebaseAuth.currentUser?.displayName ?: ""
+                   val currentUserName = firebaseAuth.currentUser?.displayName ?: ""
+                   val id=firebaseAuth.currentUser?.uid
+                   val currentUserId="${currentUserName}_$id"
                    val newChat = ChatResponse(
                        chatId = chatId,
                        participants = mapOf(currentUserId to true, targetUserId to true),
