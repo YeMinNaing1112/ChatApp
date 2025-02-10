@@ -42,9 +42,9 @@ class SearchScreenVm @Inject constructor(
     }
 
 
-    fun createChatId(targetUser: String) {
+    fun createChatId(targetUser: String,id:String) {
         val currentUserId = auth.currentUser?.displayName ?: ""
-        chatId = generateChatId(currentUserId, targetUser)
+        chatId = generateChatId(currentUserId, targetUser,id)
         chatsRepoImpl.createChat(chatId, targetUser)
     }
 
@@ -79,8 +79,8 @@ class SearchScreenVm @Inject constructor(
     }
 
 
-    private fun generateChatId(currentUserId: String, targetUserId: String): String {
-        val sortedIds = listOf(currentUserId, targetUserId).sorted()
+    private fun generateChatId(currentUserId: String, targetUserId: String,id:String): String {
+        val sortedIds = listOf(currentUserId, targetUserId,id).sorted()
         return sortedIds.joinToString("_")
     }
 

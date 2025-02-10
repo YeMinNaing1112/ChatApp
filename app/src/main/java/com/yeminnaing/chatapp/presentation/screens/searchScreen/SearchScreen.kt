@@ -35,8 +35,8 @@ fun SearchScreen() {
         }else{
             viewmodel.findByName(user)
         }
-    }, createChatIdandMessage = {
-        viewmodel.createChatId(it)
+    }, createChatIdandMessage = {userName,id->
+        viewmodel.createChatId(userName,id)
 //        viewmodel.createMessage()
     }, navigateChatScreen = {
         viewmodel.navigateToChatScreen()
@@ -51,7 +51,7 @@ fun SearchScreenDesign(
     modifier: Modifier = Modifier,
     searchStates: SearchScreenVm.SearchStates,
     findUser: (String) -> Unit,
-    createChatIdandMessage: (String) -> Unit,
+    createChatIdandMessage: (userName:String,id:String) -> Unit,
     navigateChatScreen: () -> Unit,
 ) {
     var text by remember {
@@ -121,7 +121,7 @@ fun SearchScreenDesign(
                            style = AppTheme.typography.body, color = AppTheme.colorScheme.secondary, modifier = Modifier
                                .fillMaxWidth()
                                .clickable {
-                                   createChatIdandMessage(user.username)
+                                   createChatIdandMessage(user.username,user.userId)
                                    navigateChatScreen()
                                })
                    }
@@ -142,6 +142,6 @@ private fun SearchScreenDesignPrev() {
     SearchScreenDesign(
         searchStates = SearchScreenVm.SearchStates.Empty,
         findUser = {},
-        createChatIdandMessage = {},
+        createChatIdandMessage = {_,_->},
         navigateChatScreen = {})
 }
