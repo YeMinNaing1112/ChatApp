@@ -21,10 +21,12 @@ class AuthRepoImpl @Inject constructor(
         email: String,
         password: String,
         userName: String,
+        address:String,
+        bio:String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit,
     ) {
-        mAuthManagerImpl.register(email, password, userName, onSuccess, onFailure)
+        mAuthManagerImpl.register(email, password, userName,address,bio, onSuccess, onFailure)
     }
 
     override fun checkAuthStatus(): Boolean {

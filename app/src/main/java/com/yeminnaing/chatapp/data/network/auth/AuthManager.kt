@@ -6,6 +6,8 @@ interface AuthManager {
         email: String,
         password: String,
         name: String,
+        address:String,
+        bio:String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit,
     )

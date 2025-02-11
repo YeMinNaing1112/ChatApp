@@ -29,6 +29,8 @@ class AuthManagerImpl @Inject constructor(
         email: String,
         password: String,
         name: String,
+        address:String,
+        bio:String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit,
     ) {
@@ -45,7 +47,9 @@ class AuthManagerImpl @Inject constructor(
                     val user = UserResponse(
                         userId =userId ,
                         email=email,
-                        username = name
+                        username = name,
+                        address=address,
+                        bio=bio
                     )
                     mFirebaseDatabase.child("users").child(userId).setValue(user)
                 } else {

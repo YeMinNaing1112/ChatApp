@@ -89,7 +89,7 @@ class AuthVm @Inject constructor(
         )
     }
 
-    fun register(name: String, email: String, password: String) {
+    fun register(name: String, email: String, password: String,address:String,bio:String) {
         if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
             _authState.value = AuthStates.Error("Email or password can't be empty")
             return
@@ -98,6 +98,8 @@ class AuthVm @Inject constructor(
             email = email,
             password = password,
             userName = name,
+            address = address,
+            bio = bio,
             onSuccess = {
                 _authState.value = AuthStates.Authenticated
             }, onFailure = {

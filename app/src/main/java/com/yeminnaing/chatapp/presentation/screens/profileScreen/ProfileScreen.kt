@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
@@ -96,7 +97,6 @@ fun ProfileScreenDesign() {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             text = "Ye Min Naing",
             color = AppTheme.colorScheme.secondary,
@@ -108,25 +108,52 @@ fun ProfileScreenDesign() {
             color = AppTheme.colorScheme.secondary,
             fontSize = 16.sp,
         )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp), horizontalAlignment = Alignment.Start
+
+        Card(
+            modifier = Modifier.padding(
+                16.dp
+            ).fillMaxWidth()
         ) {
-            Text(
-                text = "Address",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(text = "Taungoo")
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Bio",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(text = "Steven Paul Jobs was an American businessman, inventor, and investor best known for co-founding the technology company Apple Inc. Jobs was also the founder of NeXT and chairman and majority shareholder of Pixa")
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp), horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Address",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Taungoo")
+
+            }
         }
+
+        Card(
+            modifier = Modifier.padding(
+                16.dp
+            ).fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp), horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Bio",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Steven Paul Jobs was an American businessman, inventor, and investor best known for co-founding the technology company Apple Inc. Jobs was also the founder of NeXT and chairman and majority shareholder of Pixa")
+
+
+            }
+        }
+
 
     }
 
