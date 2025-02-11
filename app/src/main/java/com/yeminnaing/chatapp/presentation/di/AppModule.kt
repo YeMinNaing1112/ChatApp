@@ -10,6 +10,7 @@ import com.google.firebase.database.database
 import com.yeminnaing.chatapp.data.network.auth.AuthManagerImpl
 import com.yeminnaing.chatapp.data.network.realTimeDataBase.ChatsRealTimeDataBaseImpl
 import com.yeminnaing.chatapp.data.network.realTimeDataBase.MessageRealtimeDataBaseImpl
+import com.yeminnaing.chatapp.data.network.realTimeDataBase.ProfileRealTimeDataBaseImpl
 import com.yeminnaing.chatapp.presentation.navigation.DefaultNavigator
 import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.presentation.navigation.Navigator
@@ -67,6 +68,17 @@ object AppModule {
     ): MessageRealtimeDataBaseImpl {
         return MessageRealtimeDataBaseImpl(
             firebase, firebaseAuth
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileRealTimeDataBaseImpl(
+        firebase: DatabaseReference,
+        firebaseAuth:FirebaseAuth
+    ):ProfileRealTimeDataBaseImpl{
+        return ProfileRealTimeDataBaseImpl(
+            firebase,firebaseAuth
         )
     }
 

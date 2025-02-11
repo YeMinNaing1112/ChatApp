@@ -71,6 +71,8 @@ fun HomeScreen() {
         navigateToSearchScreen = viewModel::navigateToSearchScreen,
         getLastMessage = {
             viewModel.upDateChatWithLastMessage(it)
+        }, navigateToProfileScreen = {
+            viewModel.navigateToProfileScreen()
         })
 
 }
@@ -84,6 +86,7 @@ fun HomeScreenDesign(
     getLastMessage: (String) -> Unit,
     navigateToChatScreen: (String) -> Unit,
     navigateToSearchScreen: () -> Unit,
+    navigateToProfileScreen: () -> Unit,
 ) {
     val addChannelDialog = remember {
         mutableStateOf(false)
@@ -105,7 +108,11 @@ fun HomeScreenDesign(
 
         ) {
 
-            TopAppBar(navigateToSearchScreen = { navigateToSearchScreen() })
+            TopAppBar(navigateToSearchScreen = {
+                navigateToSearchScreen()
+            }, navigateToProfileScreen = {
+                navigateToProfileScreen()
+            })
             when (chatsStates) {
                 is HomeScreenVm.GetChatsStates.Empty -> {
 
@@ -215,8 +222,8 @@ fun findTargetUser(participants: Map<String, Boolean>): String? {
     val currentUserName = Firebase.auth.currentUser?.displayName
     val participant1 = participants.keys.elementAtOrNull(0)
     val participant2 = participants.keys.elementAtOrNull(1)
-    val participants1Name= participant1?.substringBefore("_")
-    val participants2Name= participant2?.substringBefore("_")
+    val participants1Name = participant1?.substringBefore("_")
+    val participants2Name = participant2?.substringBefore("_")
     return if (participants1Name != currentUserName) participants1Name else participants2Name
 }
 
@@ -243,7 +250,11 @@ fun AddChannelDialog(onAddChannel: (String) -> Unit) {
 }
 
 @Composable
-fun TopAppBar(modifier: Modifier = Modifier, navigateToSearchScreen: () -> Unit) {
+fun TopAppBar(
+    modifier: Modifier = Modifier,
+    navigateToSearchScreen: () -> Unit,
+    navigateToProfileScreen: () -> Unit,
+) {
     Column {
         Row(
             modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
@@ -260,25 +271,29 @@ fun TopAppBar(modifier: Modifier = Modifier, navigateToSearchScreen: () -> Unit)
             Text(
                 text = "Chat Room",
                 color = AppTheme.colorScheme.secondary,
-                modifier = Modifier.padding(top = 16.dp)
-                , fontSize = 16.sp
-                    , fontWeight = FontWeight.Bold
+                modifier = Modifier.padding(top = 16.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
             )
 
             Icon(
                 imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Account",
+                contentDescription = "Profile",
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .size(32.dp),
+                    .size(32.dp)
+                    .clickable {
+                        navigateToProfileScreen()
+                    },
                 tint = AppTheme.colorScheme.secondary
             )
         }
 
-        Row (
+        Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .clip(RoundedCornerShape(32.dp))
                 .background(Color.LightGray)
@@ -286,7 +301,7 @@ fun TopAppBar(modifier: Modifier = Modifier, navigateToSearchScreen: () -> Unit)
                     navigateToSearchScreen()
                 }
 
-        ){
+        ) {
             Text(
                 text = "Search",
                 color = Color.Black,
@@ -327,7 +342,9 @@ private fun HomeScreenDesignPrev() {
         addChannel = {},
         navigateToChatScreen = {},
         getLastMessage = {},
-        navigateToSearchScreen = {})
+        navigateToSearchScreen = {},
+        navigateToProfileScreen = {}
+    )
 }
 
 @Preview
@@ -339,7 +356,8 @@ private fun AddChannelDialogPrev() {
 @Preview
 @Composable
 private fun TopAppBarPrev() {
-    TopAppBar {
-
-    }
+    TopAppBar(
+        navigateToProfileScreen = {},
+        navigateToSearchScreen = {}
+    )
 }

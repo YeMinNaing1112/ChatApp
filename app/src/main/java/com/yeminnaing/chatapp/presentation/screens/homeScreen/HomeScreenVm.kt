@@ -27,7 +27,6 @@ class HomeScreenVm @Inject constructor(
     val getLastMessageMap = _getLastMessageMap.asStateFlow()
 
 
-
     init {
         getChats()
     }
@@ -50,6 +49,20 @@ class HomeScreenVm @Inject constructor(
     fun navigateToSearchScreen() {
         viewModelScope.launch {
             navigator.navigate(destination = Destination.SearchScreen,
+                navOption = {
+                    popUpTo(Destination.HomeScreen) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            )
+        }
+    }
+
+    fun navigateToProfileScreen() {
+        viewModelScope.launch {
+            navigator.navigate(
+                destination = Destination.ProfileScreen,
                 navOption = {
                     popUpTo(Destination.HomeScreen) {
                         inclusive = true

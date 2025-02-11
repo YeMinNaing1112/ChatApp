@@ -10,6 +10,7 @@ import com.yeminnaing.chatapp.presentation.screens.authScreen.RegisterScreen
 import com.yeminnaing.chatapp.presentation.screens.authScreen.SignInScreen
 import com.yeminnaing.chatapp.presentation.screens.chatScreen.ChatScreen
 import com.yeminnaing.chatapp.presentation.screens.homeScreen.HomeScreen
+import com.yeminnaing.chatapp.presentation.screens.profileScreen.ProfileScreen
 import com.yeminnaing.chatapp.presentation.screens.searchScreen.SearchScreen
 import com.yeminnaing.chatapp.presentation.screens.splashScreen.SplashScreen
 
@@ -61,6 +62,9 @@ fun ChatScreensNavGraph(navigator: Navigator) {
 
             composable<Destination.SearchScreen> {
                 SearchScreen()
+            }
+            composable<Destination.ProfileScreen> {
+                ProfileScreen()
             }
         }
     }
