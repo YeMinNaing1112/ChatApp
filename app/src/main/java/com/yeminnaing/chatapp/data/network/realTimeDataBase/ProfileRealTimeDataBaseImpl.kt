@@ -33,4 +33,21 @@ constructor(
 
        })
     }
+
+    override fun editUserProfile(
+        email: String,
+        name: String,
+        address: String,
+        bio: String,
+    ) {
+        val userId=firebaseAuth.currentUser?.uid ?: ""
+        val user = UserResponse(
+            userId =userId ,
+            email=email,
+            username = name,
+            address=address,
+            bio=bio
+        )
+        realTimeDataBase.child("users").child(userId).setValue(user)
+    }
 }

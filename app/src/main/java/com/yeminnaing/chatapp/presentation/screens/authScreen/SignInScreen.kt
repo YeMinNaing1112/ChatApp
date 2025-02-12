@@ -1,7 +1,9 @@
 package com.yeminnaing.chatapp.presentation.screens.authScreen
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,13 +32,17 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.yeminnaing.chatapp.R
 import com.yeminnaing.chatapp.presentation.navigation.Destination
 import com.yeminnaing.chatapp.ui.theme.AppTheme
 
@@ -129,10 +135,14 @@ fun SignInScreenDesign(
                 )
 
 
+                var visibility by remember {
+                    mutableStateOf(false)
+                }
                 TextField(
                     value = password,
                     onValueChange = { password = it },
                     placeholder = { Text(text = "Password") },
+                    visualTransformation = if (visibility) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
@@ -141,8 +151,21 @@ fun SignInScreenDesign(
                         onDone = {
                             keyboardController?.hide()
                         }
-                    ),
-                    modifier = modifier.padding(top = 10.dp)
+                    ), modifier = modifier
+                        .padding(top = 10.dp)
+                        .focusRequester(passwordRequester),
+                    trailingIcon = {
+                        val image =
+                            if (visibility) painterResource(id = R.drawable.eye_close)
+                            else painterResource(id = R.drawable.eye_open)
+
+                        Image(painter = image,
+                            contentDescription = "password open/close icon",
+                            Modifier.clickable {
+                                visibility = !visibility
+                            }
+                        )
+                    }
                 )
 
                 Button(onClick = {

@@ -7,4 +7,11 @@ interface ProfileFireBaseApi {
         onSuccess: (user: UserResponse) -> Unit,
         onFailure: (String) -> Unit,
     )
+
+    fun editUserProfile(
+        email: String,
+        name: String,
+        address:String,
+        bio:String,
+    )
 }

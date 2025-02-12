@@ -16,4 +16,13 @@ class ProfileRepoImpl @Inject constructor(
             onSuccess, onFailure
         )
     }
+
+    override fun editUserProfile(
+        email: String,
+        name: String,
+        address: String,
+        bio: String,
+    ) {
+        profileRealTimeDataBaseImpl.editUserProfile(email, name, address, bio)
+    }
 }

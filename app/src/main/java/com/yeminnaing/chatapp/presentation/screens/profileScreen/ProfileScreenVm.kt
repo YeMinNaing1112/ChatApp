@@ -19,6 +19,16 @@ class ProfileScreenVm @Inject constructor(
         getProfile()
     }
 
+    fun editProfile(
+        email: String,
+        name: String,
+        address: String,
+        bio: String,
+    ) {
+     profileRepo.editUserProfile(email, name, address, bio)
+    }
+
+
     private fun getProfile() {
         _profileState.value = ProfileDataStates.Empty
         profileRepo.getUserProfile(
