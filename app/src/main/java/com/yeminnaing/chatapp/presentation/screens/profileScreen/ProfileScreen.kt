@@ -3,6 +3,7 @@ package com.yeminnaing.chatapp.presentation.screens.profileScreen
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -114,16 +116,19 @@ fun ProfileScreenDesign(
                     )
                 }
 
-                IconButton(
-                    onClick = {
-                        dialogFlag = !dialogFlag
-                    },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 16.dp, end = 16.dp)
-                ) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Profile")
+                IconButton(onClick = { },     modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 32.dp, end = 16.dp)) {
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_photo_camera_24),
+                        contentDescription = "Add Profile Photo"
+                        , modifier = Modifier
+                            .clip(CircleShape)
+                            .background(Color.LightGray.copy(0.8f))
+                            .padding(5.dp)
 
+
+                    )
                 }
             }
             Column(
@@ -137,7 +142,19 @@ fun ProfileScreenDesign(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
                         .background(AppTheme.colorScheme.primary)
-                )
+                ){
+                    IconButton(
+                        onClick = {
+                            dialogFlag = !dialogFlag
+                        },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 16.dp, end = 16.dp)
+                    ) {
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Profile")
+
+                    }
+                }
 
             }
 
@@ -146,23 +163,46 @@ fun ProfileScreenDesign(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.15f))
-
-                ElevatedCard(
-                    elevation = CardDefaults.elevatedCardElevation(
-                        defaultElevation = 26.dp
-                    ),
-                    colors = CardDefaults.elevatedCardColors(
-                        contentColor = Color.Transparent
-                    )
+                Box(
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .size(150.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.defaultprofile),
-                        contentDescription = "Profile",
+                    ElevatedCard(
+                        elevation = CardDefaults.elevatedCardElevation(
+                            defaultElevation = 26.dp
+                        ),
+                        colors = CardDefaults.elevatedCardColors(
+                            contentColor = Color.Transparent
+                        ),
                         modifier = Modifier
-                            .height(150.dp)
-                            .width(150.dp), contentScale = ContentScale.Crop
-                    )
+                            .size(150.dp)
+                            .clip(CircleShape)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.defaultprofile),
+                            contentDescription = "Profile",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clip(CircleShape)
+                                .border(2.dp, Color.White, CircleShape)
+                        )
+                    }
+                    IconButton(onClick = { }, modifier = Modifier.align(Alignment.BottomEnd)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.baseline_photo_camera_24),
+                            contentDescription = "Add Profile Photo"
+                            , modifier = Modifier
+                                .clip(CircleShape)
+                                .background(Color.LightGray.copy(0.8f))
+                                .padding(5.dp)
+
+
+                        )
+                    }
                 }
+
 
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -245,115 +285,115 @@ fun ProfileDialog(
     userResponse: UserResponse,
     editUserProfile: (name: String, address: String, bio: String) -> Unit,
 ) {
-        val nameRequester = remember {
-            FocusRequester()
-        }
-        val addressRequester = remember {
-            FocusRequester()
-        }
-        val bioRequester = remember {
-            FocusRequester()
-        }
+    val nameRequester = remember {
+        FocusRequester()
+    }
+    val addressRequester = remember {
+        FocusRequester()
+    }
+    val bioRequester = remember {
+        FocusRequester()
+    }
 
 
-        var name by remember {
-            mutableStateOf(userResponse.username)
-        }
+    var name by remember {
+        mutableStateOf(userResponse.username)
+    }
 
-        var address by remember {
-            mutableStateOf(userResponse.address)
-        }
+    var address by remember {
+        mutableStateOf(userResponse.address)
+    }
 
-        var bio by remember {
-            mutableStateOf(userResponse.bio)
-        }
+    var bio by remember {
+        mutableStateOf(userResponse.bio)
+    }
 
-        Card(
-            modifier = Modifier
-                .padding(16.dp)
-                .clip(RoundedCornerShape(16.dp))
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .clip(RoundedCornerShape(16.dp))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            Text(
+                text = "Name",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 24.dp)
+            )
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        addressRequester.requestFocus()
+                    }
+                ),
+                modifier = Modifier
+                    .focusRequester(nameRequester)
+            )
+
+            Text(
+                text = "Address",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 24.dp)
+            )
+            TextField(
+                value = address,
+                onValueChange = { address = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        bioRequester.requestFocus()
+                    }
+                ),
+                modifier = Modifier
+                    .focusRequester(addressRequester)
+            )
+            Text(
+                text = "Bio",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 24.dp)
+            )
+            TextField(
+                value = bio,
+                onValueChange = { bio = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        ImeAction.Done
+                    }
+                ),
+                modifier = Modifier
+                    .focusRequester(bioRequester)
+            )
+
+
+            Button(
+                onClick = {
+                    editUserProfile(name, address, bio)
+                }, Modifier.padding(top = 16.dp)
             ) {
-                Text(
-                    text = "Name",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 24.dp)
-                )
-                TextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            addressRequester.requestFocus()
-                        }
-                    ),
-                    modifier = Modifier
-                        .focusRequester(nameRequester)
-                )
-
-                Text(
-                    text = "Address",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 24.dp)
-                )
-                TextField(
-                    value = address,
-                    onValueChange = { address = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            bioRequester.requestFocus()
-                        }
-                    ),
-                    modifier = Modifier
-                        .focusRequester(addressRequester)
-                )
-                Text(
-                    text = "Bio",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 24.dp)
-                )
-                TextField(
-                    value = bio,
-                    onValueChange = { bio = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            ImeAction.Done
-                        }
-                    ),
-                    modifier = Modifier
-                        .focusRequester(bioRequester)
-                )
-
-
-                Button(
-                    onClick = {
-                        editUserProfile(name, address, bio)
-                    }, Modifier.padding(top = 16.dp)
-                ) {
-                    Text(text = "Edit")
-                }
-
+                Text(text = "Edit")
             }
+
         }
     }
+}
 
 
 @Preview
@@ -381,6 +421,6 @@ private fun ProfileDialogPrev() {
             email = "test@email.com",
             address = "Taungoo",
             bio = "This is a Biography"
-        ), editUserProfile = { _, _, _, -> }
+        ), editUserProfile = { _, _, _ -> }
     )
 }

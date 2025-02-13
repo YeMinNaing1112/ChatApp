@@ -1,5 +1,6 @@
 package com.yeminnaing.chatapp.data.network.realTimeDataBase
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -49,5 +50,11 @@ constructor(
             bio=bio
         )
         realTimeDataBase.child("users").child(userId).setValue(user)
+            .addOnSuccessListener {
+                Log.d("EditProfile", "editUserProfile: ")
+            }
+            .addOnFailureListener {
+                Log.d("EditProfile", "editUserProfile: $it ")
+            }
     }
 }
