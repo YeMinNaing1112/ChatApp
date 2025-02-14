@@ -1,5 +1,7 @@
 package com.yeminnaing.chatapp.data.repositories
 
+import android.content.Context
+import android.net.Uri
 import com.yeminnaing.chatapp.data.network.realTimeDataBase.ProfileRealTimeDataBaseImpl
 import com.yeminnaing.chatapp.domain.repositories.ProfileRepo
 import com.yeminnaing.chatapp.domain.responses.UserResponse
@@ -22,7 +24,12 @@ class ProfileRepoImpl @Inject constructor(
         name: String,
         address: String,
         bio: String,
+        image:String
     ) {
-        profileRealTimeDataBaseImpl.editUserProfile(email, name, address, bio)
+        profileRealTimeDataBaseImpl.editUserProfile(email, name, address, bio,image)
+    }
+
+    override fun uploadImage(imageUri: Uri, user: UserResponse, context: Context) {
+        profileRealTimeDataBaseImpl.uploadImage(imageUri, user, context)
     }
 }

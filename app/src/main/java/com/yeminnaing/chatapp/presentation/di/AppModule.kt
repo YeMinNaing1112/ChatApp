@@ -7,6 +7,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.yeminnaing.chatapp.data.network.auth.AuthManagerImpl
 import com.yeminnaing.chatapp.data.network.realTimeDataBase.ChatsRealTimeDataBaseImpl
 import com.yeminnaing.chatapp.data.network.realTimeDataBase.MessageRealtimeDataBaseImpl
@@ -73,12 +75,19 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideFireBaseStorage(): StorageReference {
+        return FirebaseStorage.getInstance().reference
+    }
+
+    @Provides
+    @Singleton
     fun provideProfileRealTimeDataBaseImpl(
         firebase: DatabaseReference,
-        firebaseAuth:FirebaseAuth
+        firebaseAuth:FirebaseAuth,
+        firebaseStorage: StorageReference
     ):ProfileRealTimeDataBaseImpl{
         return ProfileRealTimeDataBaseImpl(
-            firebase,firebaseAuth
+            firebase,firebaseAuth,firebaseStorage
         )
     }
 

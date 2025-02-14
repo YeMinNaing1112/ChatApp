@@ -5,5 +5,6 @@ data class UserResponse (
     val email:String="",
     val username:String="",
     val address:String="",
-    val bio:String=""
+    val bio:String="",
+    val image:String=""
 )

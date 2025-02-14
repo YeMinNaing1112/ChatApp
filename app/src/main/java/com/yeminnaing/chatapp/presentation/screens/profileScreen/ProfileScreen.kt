@@ -1,6 +1,10 @@
 package com.yeminnaing.chatapp.presentation.screens.profileScreen
 
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.yeminnaing.chatapp.R
 import com.yeminnaing.chatapp.domain.responses.UserResponse
 import com.yeminnaing.chatapp.ui.theme.AppTheme
@@ -61,9 +66,11 @@ import com.yeminnaing.chatapp.ui.theme.AppTheme
 fun ProfileScreen(modifier: Modifier = Modifier) {
     val viewModel: ProfileScreenVm = hiltViewModel()
     val profileState by viewModel.profileState.collectAsState()
-
+    val context = LocalContext.current
     ProfileScreenDesign(profileState, editUserProfile = { name, address, bio, email ->
         viewModel.editProfile(name = name, address = address, email = email, bio = bio)
+    }, upLoadPhoto = { imageUri, userResponse ->
+        viewModel.uploadImage(imageUri, userResponse, context)
     })
 }
 
@@ -71,9 +78,23 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 fun ProfileScreenDesign(
     profileState: ProfileScreenVm.ProfileDataStates,
     editUserProfile: (name: String, address: String, bio: String, email: String) -> Unit,
+    upLoadPhoto: (imageUri: Uri, userResponse: UserResponse) -> Unit,
 ) {
+    var selectedImageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            selectedImageUri = uri
+        }
+    )
     val context = LocalContext.current
     var dialogFlag by remember {
+        mutableStateOf(false)
+    }
+
+    var upLoadImageDialogFlag by remember {
         mutableStateOf(false)
     }
     when (profileState) {
@@ -116,13 +137,14 @@ fun ProfileScreenDesign(
                     )
                 }
 
-                IconButton(onClick = { },     modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 32.dp, end = 16.dp)) {
+                IconButton(
+                    onClick = { }, modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 32.dp, end = 16.dp)
+                ) {
                     Image(
                         painter = painterResource(id = R.drawable.baseline_photo_camera_24),
-                        contentDescription = "Add Profile Photo"
-                        , modifier = Modifier
+                        contentDescription = "Add Profile Photo", modifier = Modifier
                             .clip(CircleShape)
                             .background(Color.LightGray.copy(0.8f))
                             .padding(5.dp)
@@ -142,7 +164,7 @@ fun ProfileScreenDesign(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
                         .background(AppTheme.colorScheme.primary)
-                ){
+                ) {
                     IconButton(
                         onClick = {
                             dialogFlag = !dialogFlag
@@ -168,6 +190,15 @@ fun ProfileScreenDesign(
                         .background(Color.Transparent)
                         .size(150.dp)
                 ) {
+                    var selectedImageUri by remember {
+                        mutableStateOf<Uri?>(null)
+                    }
+                    val photoPickerLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.PickVisualMedia(),
+                        onResult = { uri ->
+                            selectedImageUri = uri
+                        }
+                    )
                     ElevatedCard(
                         elevation = CardDefaults.elevatedCardElevation(
                             defaultElevation = 26.dp
@@ -179,27 +210,56 @@ fun ProfileScreenDesign(
                             .size(150.dp)
                             .clip(CircleShape)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.defaultprofile),
-                            contentDescription = "Profile",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(150.dp)
-                                .clip(CircleShape)
-                                .border(2.dp, Color.White, CircleShape)
-                        )
+
+                        if (profileState.userResponse.image == "") {
+                            Image(
+                                painter = painterResource(id = R.drawable.defaultprofile),
+                                contentDescription = "Profile",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clip(CircleShape)
+                                    .border(2.dp, Color.White, CircleShape)
+                            )
+                        } else {
+                            AsyncImage(
+                                model = selectedImageUri,
+                                contentDescription = "Profile",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clip(CircleShape)
+                                    .border(2.dp, Color.White, CircleShape)
+                            )
+                        }
+
                     }
-                    IconButton(onClick = { }, modifier = Modifier.align(Alignment.BottomEnd)) {
+                    IconButton(onClick = {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                        upLoadImageDialogFlag = true
+
+                    }, modifier = Modifier.align(Alignment.BottomEnd)) {
                         Image(
                             painter = painterResource(id = R.drawable.baseline_photo_camera_24),
-                            contentDescription = "Add Profile Photo"
-                            , modifier = Modifier
+                            contentDescription = "Add Profile Photo", modifier = Modifier
                                 .clip(CircleShape)
                                 .background(Color.LightGray.copy(0.8f))
                                 .padding(5.dp)
 
 
                         )
+                    }
+
+                    if (upLoadImageDialogFlag){
+                        Dialog(onDismissRequest = { upLoadImageDialogFlag=false}) {
+                            selectedImageUri?.let {
+                                UploadPhotoDialog(uri = it) {
+                                    upLoadPhoto(it,profileState.userResponse)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -266,6 +326,9 @@ fun ProfileScreenDesign(
                     }
                 }
 
+
+
+
                 if (dialogFlag) {
                     Dialog(onDismissRequest = { dialogFlag = false }) {
                         ProfileDialog(userResponse = profileState.userResponse) { name, address, bio ->
@@ -279,6 +342,40 @@ fun ProfileScreenDesign(
         }
     }
 }
+
+@Composable
+fun UploadPhotoDialog(uri: Uri, upload: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .clip(RoundedCornerShape(16.dp))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            AsyncImage(
+                model = uri, contentDescription = "SelectedPhoto",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.White, CircleShape)
+            )
+            Text(
+                text = "Are You Confirm to Change the Image",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 32.dp)
+            )
+            Button(onClick = { upload() }) {
+                Text(text = "Save")
+            }
+        }
+    }
+}
+
 
 @Composable
 fun ProfileDialog(
@@ -407,7 +504,8 @@ private fun ProfileScreenDesignPrev() {
                 address = "Taungoo",
                 bio = "This is a Biography"
             )
-        ), editUserProfile = { _, _, _, _ -> }
+        ), editUserProfile = { _, _, _, _ -> },
+        upLoadPhoto = { _, _ -> }
     )
 }
 
@@ -423,4 +521,12 @@ private fun ProfileDialogPrev() {
             bio = "This is a Biography"
         ), editUserProfile = { _, _, _ -> }
     )
+}
+
+@Preview
+@Composable
+private fun UpLoadPhotoDialogPrev() {
+    UploadPhotoDialog(uri = Uri.EMPTY) {
+
+    }
 }

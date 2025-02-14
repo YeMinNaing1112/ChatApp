@@ -1,5 +1,7 @@
 package com.yeminnaing.chatapp.presentation.screens.profileScreen
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.yeminnaing.chatapp.domain.repositories.ProfileRepo
 import com.yeminnaing.chatapp.domain.responses.UserResponse
@@ -25,7 +27,15 @@ class ProfileScreenVm @Inject constructor(
         address: String,
         bio: String,
     ) {
-     profileRepo.editUserProfile(email, name, address, bio)
+        profileRepo.editUserProfile(email, name, address, bio, image = "")
+    }
+
+    fun uploadImage(
+        imageUri: Uri,
+        user: UserResponse,
+        context: Context,
+    ) {
+           profileRepo.uploadImage(imageUri, user, context)
     }
 
 
