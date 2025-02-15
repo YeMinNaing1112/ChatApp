@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yeminnaing.chatapp.R
 import com.yeminnaing.chatapp.presentation.screens.authScreen.AuthVm
@@ -61,9 +63,10 @@ fun SplashScreenDesign(modifier: Modifier = Modifier) {
             .background(Color.Gray)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            painter = painterResource(id = R.drawable.chat_logo),
             contentDescription = "SplashIcon",
             modifier = modifier.align(Alignment.Center)
+                .size(100.dp)
         )
 
     }

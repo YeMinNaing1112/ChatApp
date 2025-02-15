@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,12 +22,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +43,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.yeminnaing.chatapp.domain.responses.Message
 import com.yeminnaing.chatapp.ui.theme.AppTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun ChatScreen(chatId: String) {
@@ -52,7 +56,6 @@ fun ChatScreen(chatId: String) {
         viewModel.navigateBackToHome()
     }
 
-//        viewModel.scheduleWork(context, id)
 
 
     Scaffold {
@@ -84,8 +87,6 @@ fun ChatScreen(chatId: String) {
                 }
 
                 is ChatScreenVm.GetMessageStates.Success -> {
-
-
                     ChatScreenDesign(
                         messages = (messageStates as ChatScreenVm.GetMessageStates.Success).data,
                         onSendMessage = { message ->
@@ -104,7 +105,6 @@ fun ChatScreen(chatId: String) {
 
 @Composable
 fun ChatScreenDesign(
-    modifier: Modifier = Modifier,
     messages: List<Message>,
     onSendMessage: (String) -> Unit,
 ) {
@@ -113,9 +113,10 @@ fun ChatScreenDesign(
     val msg = remember {
         mutableStateOf("")
     }
-
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.padding(bottom = 52.dp),
+        ){
             items(messages) { message ->
                 ChatList(message = message)
             }
@@ -125,12 +126,18 @@ fun ChatScreenDesign(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(8.dp)
-                .background(Color.LightGray), verticalAlignment = Alignment.CenterVertically
+                .background(Color.LightGray),
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
             TextField(
                 value = msg.value,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
                 onValueChange = { msg.value = it },
                 modifier = Modifier.weight(1f),
                 placeholder = { Text(text = "Type a message") },

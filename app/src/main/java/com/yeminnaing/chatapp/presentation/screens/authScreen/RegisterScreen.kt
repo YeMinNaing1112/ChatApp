@@ -60,11 +60,7 @@ fun RegisterScreen() {
 
             AuthVm.AuthStates.Empty -> {}
             is AuthVm.AuthStates.Error -> {
-                Toast.makeText(
-                    context,
-                    ((authState as AuthVm.AuthStates.Error).message),
-                    Toast.LENGTH_SHORT
-                ).show()
+
             }
 
             is AuthVm.AuthStates.Loading -> {

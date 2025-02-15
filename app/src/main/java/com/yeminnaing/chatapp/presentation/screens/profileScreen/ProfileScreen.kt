@@ -24,6 +24,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -71,6 +72,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         viewModel.editProfile(name = name, address = address, email = email, bio = bio)
     }, upLoadPhoto = { imageUri, userResponse ->
         viewModel.uploadImage(imageUri, userResponse, context)
+    }, signOut = {
+        viewModel.signOut()
     })
 }
 
@@ -79,6 +82,7 @@ fun ProfileScreenDesign(
     profileState: ProfileScreenVm.ProfileDataStates,
     editUserProfile: (name: String, address: String, bio: String, email: String) -> Unit,
     upLoadPhoto: (imageUri: Uri, userResponse: UserResponse) -> Unit,
+    signOut:()->Unit
 ) {
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -122,7 +126,7 @@ fun ProfileScreenDesign(
                         modifier = Modifier.weight(0.35f)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
+                            painter = painterResource(id = R.drawable.defaultprofile),
                             contentDescription = "ProfileBlurImage",
                             contentScale = ContentScale.Crop, modifier = Modifier
                                 .fillMaxSize()
@@ -174,6 +178,17 @@ fun ProfileScreenDesign(
                             .padding(top = 16.dp, end = 16.dp)
                     ) {
                         Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Profile")
+
+                    }
+                    Button(
+                        onClick = {
+                            signOut()
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(bottom = 16.dp, end = 16.dp)
+                    ) {
+                        Text(text = "Sign Out")
 
                     }
                 }
@@ -252,11 +267,11 @@ fun ProfileScreenDesign(
                         )
                     }
 
-                    if (upLoadImageDialogFlag){
-                        Dialog(onDismissRequest = { upLoadImageDialogFlag=false}) {
+                    if (upLoadImageDialogFlag) {
+                        Dialog(onDismissRequest = { upLoadImageDialogFlag = false }) {
                             selectedImageUri?.let {
                                 UploadPhotoDialog(uri = it) {
-                                    upLoadPhoto(it,profileState.userResponse)
+                                    upLoadPhoto(it, profileState.userResponse)
                                 }
                             }
                         }
@@ -505,7 +520,8 @@ private fun ProfileScreenDesignPrev() {
                 bio = "This is a Biography"
             )
         ), editUserProfile = { _, _, _, _ -> },
-        upLoadPhoto = { _, _ -> }
+        upLoadPhoto = { _, _ -> },
+        signOut = {}
     )
 }
 

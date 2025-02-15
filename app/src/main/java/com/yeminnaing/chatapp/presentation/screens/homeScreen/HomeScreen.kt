@@ -64,9 +64,6 @@ fun HomeScreen() {
 
     HomeScreenDesign(chatsStates,
         getLastMessageStatesMap,
-        addChannel = {
-//        viewModel.addChannel(it)
-        },
         navigateToChatScreen = viewModel::navigateToChatScreen,
         navigateToSearchScreen = viewModel::navigateToSearchScreen,
         getLastMessage = {
@@ -82,23 +79,14 @@ fun HomeScreen() {
 fun HomeScreenDesign(
     chatsStates: HomeScreenVm.GetChatsStates,
     getLastMessageStates: Map<String, HomeScreenVm.GetLastMessage>,
-    addChannel: (String) -> Unit,
     getLastMessage: (String) -> Unit,
     navigateToChatScreen: (String) -> Unit,
     navigateToSearchScreen: () -> Unit,
     navigateToProfileScreen: () -> Unit,
 ) {
-    val addChannelDialog = remember {
-        mutableStateOf(false)
-    }
+
     Scaffold(
         modifier = Modifier.background(AppTheme.colorScheme.primary),
-        floatingActionButton = {
-            FloatingActionButton(onClick = { addChannelDialog.value = true }) {
-                Text(text = "+")
-            }
-
-        },
     ) {
         Column(
             modifier = Modifier
@@ -206,15 +194,6 @@ fun HomeScreenDesign(
 
         }
     }
-
-    if (addChannelDialog.value) {
-        Dialog(onDismissRequest = { addChannelDialog.value = false }) {
-            AddChannelDialog {
-                addChannel(it)
-                addChannelDialog.value = false
-            }
-        }
-    }
 }
 
 
@@ -225,28 +204,6 @@ fun findTargetUser(participants: Map<String, Boolean>): String? {
     val participants1Name = participant1?.substringBefore("_")
     val participants2Name = participant2?.substringBefore("_")
     return if (participants1Name != currentUserName) participants1Name else participants2Name
-}
-
-@Composable
-fun AddChannelDialog(onAddChannel: (String) -> Unit) {
-    val channelName = remember {
-        mutableStateOf("")
-    }
-    Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Add Channel")
-        Spacer(modifier = Modifier.padding(8.dp))
-        TextField(value = channelName.value, onValueChange = {
-            channelName.value = it
-        }, label = { Text(text = "Channel Name") }, singleLine = true)
-        Spacer(modifier = Modifier.padding(8.dp))
-        Button(onClick = { onAddChannel(channelName.value) }, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Add")
-        }
-    }
 }
 
 @Composable
@@ -339,18 +296,11 @@ private fun HomeScreenDesignPrev() {
             )
         ),
         getLastMessageStates = mapOf(),
-        addChannel = {},
         navigateToChatScreen = {},
         getLastMessage = {},
         navigateToSearchScreen = {},
         navigateToProfileScreen = {}
     )
-}
-
-@Preview
-@Composable
-private fun AddChannelDialogPrev() {
-    AddChannelDialog(onAddChannel = {})
 }
 
 @Preview
